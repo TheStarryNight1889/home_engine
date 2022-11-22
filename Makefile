@@ -7,3 +7,4 @@ mqtt-up:
 
 mqtt-down:
 	docker compose -f services/mqtt-broker/docker-compose.yaml down
+	
