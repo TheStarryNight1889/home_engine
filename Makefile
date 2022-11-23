@@ -3,7 +3,7 @@
 # -------------------- #
 
 mqtt-up:
-	docker compose -f services/mqtt-broker/docker-compose.yaml up -d
+	docker compose -f services/docker-compose.yaml up mosquitto -d
 
 mqtt-down:
-	docker compose -f services/mqtt-broker/docker-compose.yaml down
+	docker compose -f services/docker-compose.yaml down mosquitto
