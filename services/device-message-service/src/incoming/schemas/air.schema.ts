@@ -5,12 +5,14 @@ export type AirDocument = HydratedDocument<Air>;
 
 @Schema()
 export class Air {
-  @Prop()
+  @Prop({ required: false })
   temperature: number;
 
-  @Prop()
+  @Prop({ required: false })
   humidity: number;
 
-  @Prop()
+  @Prop({ required: false })
   co2: number;
 }
+
+export const AirSchema = SchemaFactory.createForClass(Air);
