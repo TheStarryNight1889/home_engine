@@ -7,6 +7,17 @@ services:
     ports:
       - 1883:1883
       - 9001:9001
+  mongo:
+    image: mongo:latest
+    container_name: mongo_db
+    volumes:
+      - ./mongo-db:/data/db
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=mqtt
+      - MONGO_INITDB_ROOT_PASSWORD=mqtt
+      - MONGO_INITDB_DATABASE=mqtt
 
 volumes:
   data: ~
