@@ -1,5 +1,7 @@
 export class CreateAirDto {
-  readonly temperature: string;
+  readonly temperature: number;
   readonly humidity: number;
-  readonly co2: string;
+  readonly co2: number;
+  readonly device_id: string;
+  readonly location_id: string;
 }
