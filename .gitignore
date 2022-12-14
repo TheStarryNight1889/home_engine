@@ -1,3 +1,4 @@
 # ignore node_modules anywhere in the path
 node_modules
 mongo-db
+dist
