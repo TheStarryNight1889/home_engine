@@ -1,7 +1,13 @@
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<div class="state-panel">
+</div>
 
 <style lang="scss">
-    p{
-        margin: 0;
+    .state-panel{
+        display: flex;
+        flex-direction: row;
+        grid-template-columns: 1fr 1fr 1fr; 
+        background-color: black;
+        margin-left: 25px;
+        margin-right: 25px;
     }
 </style>
