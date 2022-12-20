@@ -6,13 +6,33 @@
                 <p>{device.type}</p>
             </div>
             <div class="device-card__info">
-                {device.hw_id}
+                <div>
+                    {device.hw_id}
+                </div>
+                <div class="device-card__info__delete">
+                    <svg xmlns="http://www.w3.org/2000/svg" on:click='{openModal}' viewBox="0 0 384 512">
+                        <path d="M376.6 84.5c11.3-13.6 9.5-33.8-4.1-45.1s-33.8-9.5-45.1 4.1L192 206 56.6 43.5C45.3 29.9 25.1 28.1 11.5 39.4S-3.9 70.9 7.4 84.5L150.3 256 7.4 427.5c-11.3 13.6-9.5 33.8 4.1 45.1s33.8 9.5 45.1-4.1L192 306 327.4 468.5c11.3 13.6 31.5 15.4 45.1 4.1s15.4-31.5 4.1-45.1L233.7 256 376.6 84.5z"/>
+                    </svg>
+                </div>
             </div>
         </div>
     {/each}
-  </div>  
+</div>
+<div id="modal" class="delete-modal">
+    <!-- Add a heading and a message to the modal -->
+    <h2>Delete Confirmation</h2>
+    <p>Are you sure you want to delete?</p>
+</div>  
+
 <script>
     /** @type {import('./$types').PageData} */  export let data;
+
+    function openModal() {
+        // Get the modal element
+        var modal = document.getElementById("modal");
+        // Show the modal
+        modal.style.display = "block";
+    }
 </script>
 
 <style lang="scss">
@@ -70,11 +90,14 @@ $color-border: black;
     @include card;
 
     &__info {
+        display: grid;
       @include label;
-      & svg {
-        width: 50px;
-        height: 50px;
-        margin: 10px;
+      &__delete {
+        justify-self: end;
+        align-self: end;
+        width: 32px;
+        fill: red;
+        margin-right: 10px;
         cursor: pointer;
       }
     }
@@ -87,5 +110,18 @@ $color-border: black;
       }
     }
   }
+}
+.delete-modal{
+    width: 300px;
+    height: 200px;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 5px;
+    padding: 20px;
+    text-align: center;
+    h2{
+        margin: 0;
+    }
+    display: hidden;
 }
 </style>

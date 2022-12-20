@@ -1,33 +1,36 @@
 <div class="layout">
     <div class="sidenav">
-        <div class="sidenav-header">
-            <div class="sidenav-header-title">
+        <div class="sidenav__header">
+            <div class="sidenav__header__title">
                 <h1>Home Engine</h1>
             </div>
         </div>
-        <div class="sidenav-body">
-            <div class="sidenav-body-item">
+        <div class="sidenav__body">
+            <div class="sidenav__body__item">
                 <a href="/">Dashboard</a>
             </div>
-            <div class="sidenav-body-item">
+            <div class="sidenav__body__item">
                 <a href="/devices">Devices</a>
             </div>
-            <div class="sidenav-body-item">
+            <div class="sidenav__body__item">
                 <a href="/locations">Locations</a>
             </div>
-            <div class="sidenav-body-item">
+            <div class="sidenav__body__item">
                 <a href="/settings">Settings</a>
             </div>
         </div>
     </div>
     <div class="content">
-        <div class="title-card">
-            <div class="title-welcome">Welcome, Christie!</div>
-            <div class="title-text">DEVICES</div>
+        <div class="title__card">
+            <div class="title__card__welcome">Welcome, Christie!</div>
+            <div class="title__card__text">DEVICES</div>
         </div>
         <slot></slot>
     </div>
 </div>
+
+<script>
+</script>
 
 <style lang="scss">
     .content{
@@ -40,7 +43,7 @@
         height: 100vh;
         width: 100vw;
     }
-    .title-card{
+    .title__card{
         display: flex;
         flex-direction: row;
 
@@ -54,11 +57,11 @@
         // vertically center the elements
         align-items: center;
         text-align: left;
-        .title-welcome{
+        &__welcome{
             width: 70%;
             margin-left: 1rem;
         }
-        .title-text{
+        &__text{
             margin-left: 1rem;
             width:30%;
             font-size: 2rem;
@@ -74,16 +77,28 @@
         color: #000000;
         height: 100%;
         background-color: #45CB85;
-        .sidenav-header{
-            margin-left: 1rem;
+        &__header{
+            padding-left: 1rem;
+            text-align: left;
+            border-bottom: 5px solid #000000;
         }
-        .sidenav-body{
+        &__body{
+            margin-top: 2rem;
             margin-left: 1rem;
-            .sidenav-body-item {
+            margin-right: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            &__item {
+                font-size: 1.5rem;
+                border: 5px solid #000000;
+                background-color: #F0C808;
+                padding: 0.5rem;
+                text-align: center;
                 a {
                     text-decoration: none;
                     color: #000000;
-                    font-weight: 600;
+                    font-weight: 400;
                 }
             }
         }
