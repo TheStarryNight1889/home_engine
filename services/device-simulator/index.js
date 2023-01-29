@@ -11,14 +11,23 @@ try{
   client.on('connect', async () => {
     console.log(`Succesfully Connected to MQTT ${config.username}@${config.server}:${config.port}`)
     while(true) {
-      client.publish(airTopic, JSON.stringify(generateData(airSchema)))
+      let generatedData = generateData(airSchema);
+      let payload = {
+        version: 1.0,
+        timestamp: new Date().getTime(),
+        device_id: '12345',
+        location_id: '56789',
+        ...generatedData
+      }
+      client.publish(airTopic, JSON.stringify(payload));
+      console.log(`Published to ${airTopic} with payload ${JSON.stringify(payload)}`)
       await new Promise(r => setTimeout(r, 2000));
     }
   })
 } catch(err){
   console.log(err);
 }
-const airTopic = 'sensor/1234/bedr1'
+const airTopic = 'data/sensor/air'
 const airSchema = [
   {
     name: 'temperature',

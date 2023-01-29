@@ -23,7 +23,7 @@
     <div class="content">
         <div class="title__card">
             <div class="title__card__welcome">Welcome, Christie!</div>
-            <div class="title__card__text">DEVICES</div>
+            <div class="title__card__text">DASHBOARD</div>
         </div>
         <slot></slot>
     </div>
