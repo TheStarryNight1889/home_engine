@@ -1,9 +1,12 @@
 #include <ArduinoMqttClient.h>
 #include <WiFiNINA.h>
 #include <Wire.h>
+#include <RTCZero.h>
+#include <WiFiUdp.h>
 
 #include "SparkFun_SCD30_Arduino_Library.h"
 SCD30 airSensor;
+RTCZero rtc;
 
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = "PorqueFi";        // your network SSID (name)
@@ -12,9 +15,11 @@ char pass[] = "BecauseFiSaid0k"; // your network password (use for WPA, or use a
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 
-const char broker[] = "192.168.0.185";
+const char broker[] = "192.168.0.10";
 int port = 1883;
 const char sensor_topic[] = "data/sensor/air";
+
+const String device_id = "airsensor1";
 
 // set interval for sending messages (milliseconds)
 const long interval = 5000;
@@ -33,7 +38,7 @@ void setup()
     Serial.print(".");
     delay(5000);
   }
-
+  delay(10000);
   Serial.println("WIFI Connected");
 
   Serial.print("Attempting to connect to the MQTT broker: ");
@@ -49,6 +54,32 @@ void setup()
   }
   Serial.println("MQTT Connected");
 
+  rtc.begin();
+  unsigned long epoch;
+  int numberOfTries = 0, maxTries = 6;
+
+  do
+  {
+    Serial.println(WiFi.getTime());
+    epoch = WiFi.getTime();
+    numberOfTries++;
+  }
+
+  while ((epoch == 0) && (numberOfTries < maxTries));
+  if (numberOfTries == maxTries)
+  {
+    Serial.print("NTP unreachable!!");
+    while (1)
+      ;
+  }
+  else
+  {
+    Serial.print("Epoch received: ");
+    Serial.println(epoch);
+    rtc.setEpoch(epoch);
+    Serial.println();
+  }
+
   Serial.begin(115200);
   Wire.begin();
 
@@ -58,6 +89,7 @@ void setup()
     while (1)
       ;
   }
+
   Serial.println("Setting measurment interval...");
   airSensor.setMeasurementInterval(2);
   delay(200);
@@ -82,10 +114,13 @@ void loop()
     String co2 = String(airSensor.getCO2());
     String hum = String(airSensor.getHumidity());
     String temp = String(airSensor.getTemperature());
+    String timestamp = String(rtc.getEpoch());
 
     mqttClient.beginMessage(sensor_topic);
     mqttClient.println(
-        "{\n\"co2\": " + co2 +
+        "{\n\"timestamp\": " + timestamp + 
+        ",\n\"device_id\": " + device_id +
+        ",\n\"co2\": " + co2 +
         ",\n\"humidity\": " + hum +
         ",\n\"temperature\": " + temp +
         "\n}");
