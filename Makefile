@@ -9,6 +9,12 @@ all-services-up:
 all-services-down:
 	docker-compose -f services/docker-compose.yaml down
 # -------------------- #
+all-apps-up:
+	docker-compose -f apps/docker-compose.yaml up -d
+
+all-apps-down:
+	docker-compose -f apps/docker-compose.yaml down
+# -------------------- #
 mqtt-up:
 	docker compose -f services/docker-compose.yaml up mosquitto -d
 
