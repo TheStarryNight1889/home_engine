@@ -4,10 +4,10 @@
 
 # -------------------- #
 all-services-up:
-	docker-compose -f services/docker-compose.yaml up -d
+	docker compose -f services/docker-compose.yaml up -d
 
 all-services-down:
-	docker-compose -f services/docker-compose.yaml down
+	docker compose -f services/docker-compose.yaml down
 # -------------------- #
 all-apps-up:
 	docker-compose -f apps/docker-compose.yaml up -d
