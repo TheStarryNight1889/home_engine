@@ -1,17 +1,16 @@
 const express = require('express');
 const WebSocket = require('ws')
+const config = require('./config');
 const app = express();
 const bodyParser = require('body-parser');
 const {InfluxDB, Point} = require('@influxdata/influxdb-client')
 
-const token = process.env.INFLUXDB_TOKEN
-const url = 'https://eu-central-1-1.aws.cloud2.influxdata.com'
+const token = config.influxToken
+const url = config.influxUrl
 
 const client = new InfluxDB({url, token})
-let org = `molloy.christie@gmail.com`
-let bucket = `Sensor`
 
-const writeClient = client.getWriteApi(org, bucket, 'ns')
+const writeClient = client.getWriteApi(config.influxOrg, config.influxSensorBucket, 'ns')
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -20,7 +19,7 @@ app.listen(3000, () => {
     console.log('Data service listening on port 3000');
 });
 
-const wss = new WebSocket.Server({ port: 8080 });
+const wss = new WebSocket.Server({ port: config.wsPort });
 
 // /sensor/air - post data
 app.post('/sensor/air', (req, res) => {

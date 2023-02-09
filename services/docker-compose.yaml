@@ -7,17 +7,36 @@ services:
     ports:
       - 1883:1883
       - 9001:9001
-  mongo:
-    image: mongo:latest
-    container_name: mongo_db
-    volumes:
-      - ./mongo-db:/data/db
-    ports:
-      - 27017:27017
+    networks:
+      - home_engine
+  data-service:
+    image: data-service:latest
+    container_name: data-service
+    build:
+      context: ./data-service
+      dockerfile: Dockerfile
+    expose:
+      - 3000
+    networks:
+      - home_engine
+  device-service:
+    depends_on:
+      - mosquitto
+      - data-service
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=mqtt
-      - MONGO_INITDB_ROOT_PASSWORD=mqtt
-      - MONGO_INITDB_DATABASE=mqtt
+      - DATA_SERVICE_HOST=data-service
+      - DATA_SERVICE_PORT=3000
+      - MQTT_BROKER_HOST=mosquitto_mqtt
+      - MQTT_BROKER_PORT=1883
+    image: device-service:latest
+    container_name: device-service
+    build:
+      context: ./device-service
+      dockerfile: Dockerfile
+    networks:
+      - home_engine
 
 volumes:
   data: ~
+networks:
+  home_engine:

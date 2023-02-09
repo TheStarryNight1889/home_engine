@@ -1,5 +1,7 @@
+const config = require('./config');
+
 const mqtt = require('mqtt');
-const client = mqtt.connect('mqtt://localhost:1883');
+const client = mqtt.connect(`mqtt://${config.mqttBrokerHost}:${config.mqttBrokerPort}`);
 const axios = require('axios');
 
 // subscribe to topic data/+/+
@@ -9,7 +11,7 @@ client.subscribe('data/+/+');
 client.on('message', (topic, message) => {
     const type = topic.split('/')[1];
     const subType = topic.split('/')[2];
-    const url = `http://localhost:3000/${type}/${subType}`;
+    const url = `http://${config.dataServiceHost}:${config.dataServicePort}/${type}/${subType}`;
 
     // where the message string contains 'airsensor1' wrap it in quotes
     const fixed = message.toString().replace(/airsensor1/g, '"airsensor1"');
