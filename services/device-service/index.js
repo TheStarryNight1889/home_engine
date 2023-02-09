@@ -10,8 +10,11 @@ client.on('message', (topic, message) => {
     const type = topic.split('/')[1];
     const subType = topic.split('/')[2];
     const url = `http://localhost:3000/${type}/${subType}`;
-    console.log(message.toString());
-    const data = JSON.parse(message.toString());
+
+    // where the message string contains 'airsensor1' wrap it in quotes
+    const fixed = message.toString().replace(/airsensor1/g, '"airsensor1"');
+    console.log(fixed);
+    const data = JSON.parse(fixed);
 
     console.log(url); 
 
