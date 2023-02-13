@@ -39,7 +39,7 @@ app.post('/sensor/air', (req, res) => {
         .timestamp(new Date(data.timestamp*1000))
         console.log(point);
         writeClient.writePoint(point)
-        writeClient.flush()
+        writeClient.flush(true)
         res.status(200).send('OK');
     }
     catch(err){

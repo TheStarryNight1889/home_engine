@@ -33,6 +33,7 @@ services:
     build:
       context: ./device-service
       dockerfile: Dockerfile
+    command: node dist/index.js
     networks:
       - home_engine
 
