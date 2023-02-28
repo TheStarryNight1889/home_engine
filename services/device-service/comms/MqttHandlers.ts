@@ -4,9 +4,7 @@ export const MqttHandlers = {
     fowardToApi: (topic: string, message: Buffer, apiUrl: string) => {
         const [, type, subType] = topic.split('/');
         const url = `${apiUrl}/${type}/${subType}`;
-
-        const fixed = message.toString().replace(/airsensor1/g, '"airsensor1"');
-        const data = JSON.parse(fixed);
+        const data = JSON.parse(message.toString());
 
         axios.post(url, {data,})
             .then((res: AxiosResponse) => {

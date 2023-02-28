@@ -23,7 +23,7 @@ const wss = new WebSocket.Server({ port: config.wsPort });
 
 // /sensor/air - post data
 app.post('/sensor/air', (req, res) => {
-    console.log('Received data: ', req.body.data);
+    console.log('Received data: ', req.body);
     // emit the payload to all clients via websocket
     wss.clients.forEach(client => {
         client.send(JSON.stringify(req.body.data));
