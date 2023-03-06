@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.4.1",
+    "nuxt": "^3.2.3"
+  },
+  "dependencies": {
+    "@nuxtjs/color-mode": "^3.2.0",
+    "@pinia/nuxt": "^0.4.7",
+    "chart.js": "^4.2.1",
+    "daisyui": "^2.51.3",
+    "pinia": "^2.0.33",
+    "vue-chartjs": "^5.2.0"
+  },
+  "overrides": {
+    "vue": "latest"
+  }
+}
