@@ -50,8 +50,9 @@
         </button>
       </div>
     </div>
-    <div class="divider m-0"></div>
-    <NuxtPage />
+    <div class="bg-base-200 min-h-screen p-2">
+      <NuxtPage />
+    </div>
   </div>
 </template>
 <script setup>
