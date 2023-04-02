@@ -6,6 +6,7 @@ use std::{str, time::Duration};
 struct DeviceMessage<T> {
     timestamp: u64,
     device_id: String,
+    location_id: String,
     data: T,
 }
 #[derive(Serialize, Deserialize)]

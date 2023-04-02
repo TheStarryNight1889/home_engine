@@ -22,7 +22,7 @@ app.listen(3000, () => {
 const wss = new WebSocket.Server({ port: config.wsPort });
 
 // /sensor/air - post data
-app.post('/sensor/air', (req, res) => {
+app.post('/sensor/air', async (req, res) => {
     console.log('Received data: ', req.body);
     // emit the payload to all clients via websocket
     wss.clients.forEach(client => {
@@ -39,7 +39,7 @@ app.post('/sensor/air', (req, res) => {
         .timestamp(new Date(data.timestamp*1000))
         console.log(point);
         writeClient.writePoint(point)
-        writeClient.flush(true)
+        await writeClient.flush(true)
         res.status(200).send('OK');
     }
     catch(err){
