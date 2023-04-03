@@ -1,9 +1,6 @@
 # home_engine
 Home automation platforom designed for Raspberry PI & Arduino
 
-# Architecture
-![Architecture](/docs/images/init_arch.png)
-
 ## Data
 Device emits a payload containing information about itself (metadata) and a payload
 

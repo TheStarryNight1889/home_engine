@@ -1,0 +1,16 @@
+services:
+  fronthouse:
+    image: fronthouse
+    build: ./fronthouse
+    expose:
+      - "8080"
+    ports:
+      - "8080:8080"
+  hardwire:
+    image: hardwire
+    build: ./hardwire
+  transporter:
+    image: transporter
+    build: ./transporter
+    expose:
+      - "3000"
