@@ -1,6 +1,6 @@
 use rumqttc::{AsyncClient, MqttOptions, QoS};
 use serde::{Deserialize, Serialize};
-use std::{str, time::Duration};
+use std::{env, str, time::Duration};
 
 #[derive(Serialize, Deserialize)]
 struct DeviceMessage<T> {
@@ -15,8 +15,6 @@ struct AirData {
     humidity: f32,
     co2: f32,
 }
-const DATA_SENSOR_AIR: &str = "data/sensor/air";
-const DATA_SERVICE_AIR_URL: &str = "http://localhost:3000/sensor/air";
 
 async fn foward_data(
     data: &str,
@@ -34,10 +32,22 @@ async fn foward_data(
 }
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let sub_list = vec![DATA_SENSOR_AIR];
+    let mqtt_host: String = env::var("MQTT_HOST").expect("MQTT_HOST environment variable not set");
+    let mqtt_port: String = env::var("MQTT_PORT").expect("MQTT_PORT environment variable not set");
+    let mqtt_client_id: String =
+        env::var("MQTT_CLIENT_ID").expect("MQTT_CLIENT_ID environment variable not set");
+    let mqtt_sensor_air: String =
+        env::var("MQTT_SENSOR_AIR").expect("MQTT_SENSOR_AIR environment variable not set");
+    let transporter_host: String =
+        env::var("TRANSPORTER_HOST").expect("TRANSPORTER_HOST environment variable not set");
+    let transporter_port: String =
+        env::var("TRANSPORTER_PORT").expect("TRANSPORTER_PORT environment variable not set");
+
+    let sub_list = vec![&mqtt_sensor_air];
 
     let http_client = reqwest::Client::new();
-    let mut mqttoptions = MqttOptions::new("hardwire", "192.168.0.10", 1883);
+    let mut mqttoptions =
+        MqttOptions::new(mqtt_client_id, mqtt_host, mqtt_port.parse::<u16>().unwrap());
     mqttoptions.set_keep_alive(Duration::from_secs(5));
 
     let (client, mut connection) = AsyncClient::new(mqttoptions, 10);
@@ -53,11 +63,16 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     loop {
         let notification = connection.poll().await;
         match notification {
-            Ok(rumqttc::Event::Incoming(rumqttc::Packet::Publish(p))) => match p.topic.as_str() {
-                DATA_SENSOR_AIR => {
+            Ok(rumqttc::Event::Incoming(rumqttc::Packet::Publish(p))) => match p.topic {
+                mqtt_sensor_air => {
                     let payload = str::from_utf8(&p.payload).unwrap();
 
-                    let resp = foward_data(payload, DATA_SERVICE_AIR_URL, &http_client).await;
+                    let url = format!(
+                        "http://{}:{}{}",
+                        transporter_host, transporter_port, mqtt_sensor_air
+                    );
+
+                    let resp = foward_data(payload, &url, &http_client).await;
                     match resp {
                         Ok(_) => {}
                         Err(e) => println!("Error = {:?}", e),

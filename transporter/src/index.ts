@@ -9,12 +9,12 @@ const url = process.env.INFLUXDB_URL || 'http://localhost:8086'
 const bucket = process.env.INFLUXDB_BUCKET || 'my-bucket'
 const org = process.env.INFLUXDB_ORG || 'my-org'
 
-const iclient = new InfluxDB({url, token})
+const influxClient = new InfluxDB({url, token})
 
-let writeClient = iclient.getWriteApi(org, bucket, 'ns')
+let writeClient = influxClient.getWriteApi(org, bucket, 'ns')
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.APP_PORT || 3000;
 
 app.use(express.json());
 
