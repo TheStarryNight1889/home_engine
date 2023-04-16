@@ -1,6 +1,8 @@
+version: '3.8'
 services:
   curiosity:
     image: curiosity
+    container_name: curiosity
     networks:
       - home_engine
     build: ./curiosity
@@ -12,6 +14,9 @@ services:
       - PORT=8080
       - HOST=0.0.0.0
   hardwire:
+    container_name: hardwire
+    depends_on:
+      - mosquitto
     image: hardwire
     networks:
       - home_engine
@@ -20,20 +25,30 @@ services:
       - MQTT_HOST=mosquitto
       - MQTT_PORT=1883
       - MQTT_CLIENT_ID=hardwire
-      - MQTT_SENSOR_AIR=/data/sensor/air
+      - MQTT_SENSOR_AIR=data/sensor/air
       - TRANSPORTER_HOST=transporter
       - TRANSPORTER_PORT=3000
   transporter:
+    container_name: transporter
+    depends_on:
+      - timescaledb
+      - hardwire
     networks:
       - home_engine
     image: transporter
     build: ./transporter
     environment:
+      - DB_HOST=timescaledb
+      - DB_USER=root
+      - DB_PASSWORD=root
+      - DB_NAME=home_engine
+      - DB_PORT=5432
       - APP_PORT=3000
     expose:
       - "3000"
   mosquitto:
     image: eclipse-mosquitto:latest
+    container_name: mosquitto
     networks:
       - home_engine 
     expose:
@@ -43,16 +58,16 @@ services:
     volumes:
       - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
   timescaledb:
-    image: timescale/timescaledb:latest-pg13
+    networks:
+      - home_engine
     container_name: timescaledb
+    image: timescale/timescaledb:latest-pg14
     environment:
-      - POSTGRES_PASSWORD=super_secret_password
+      - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
       - POSTGRES_DB=home_engine
     expose:
       - "5432"
-    ports:
-      - "5432:5432"
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
   
@@ -60,4 +75,3 @@ volumes:
   timescaledb_data:
 networks:
   home_engine:
-    driver: bridge

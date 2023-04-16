@@ -64,20 +64,17 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         let notification = connection.poll().await;
         match notification {
             Ok(rumqttc::Event::Incoming(rumqttc::Packet::Publish(p))) => match p.topic {
-                mqtt_sensor_air => {
+                _mqtt_sensor_air => {
                     let payload = str::from_utf8(&p.payload).unwrap();
 
                     let url = format!(
-                        "http://{}:{}{}",
-                        transporter_host, transporter_port, mqtt_sensor_air
+                        "http://{}:{}/sensor/air",
+                        transporter_host, transporter_port,
                     );
-                    println!("URL = {:?}", url);
 
                     let resp = foward_data(payload, &url, &http_client).await;
                     match resp {
-                        Ok(_) => {
-                            println!("Data forwarded")
-                        }
+                        Ok(_) => {}
                         Err(e) => println!("Error = {:?}", e),
                     }
                 }

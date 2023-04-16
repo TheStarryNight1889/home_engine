@@ -5,9 +5,19 @@ import http from 'http';
 import { Sequelize} from 'sequelize';
 import { Air, defineAirModel } from './models/Air';
 
-const connectionString = process.env.TIMESCALEDB_CONNECTION_STRING || 'postgres://your_user:your_password@localhost:5432/your_db';
+const DB_NAME = process.env.DB_NAME || 'home_engine';
+const DB_USER = process.env.DB_USER || 'root';
+const DB_PASSWORD = process.env.DB_PASSWORD || 'root';
 
-const sequelize = new Sequelize(connectionString);
+const DB_HOST = process.env.DB_HOST || 'localhost';
+const DB_PORT = parseInt(process.env.DB_PORT || '5432', 10);
+
+const sequelize = new Sequelize(DB_NAME, DB_USER, DB_PASSWORD, {
+  host: DB_HOST,
+  port: DB_PORT,
+  dialect: 'postgres',
+  logging: false, // Set this to true if you want to see SQL queries in the console
+});
 
 defineAirModel(sequelize);
 
@@ -67,6 +77,16 @@ wss.on('connection', (socket) => {
       console.log(`Server is running on port ${port}`);
     });
   } catch (err) {
-    console.error('Unable to connect to the database:', err);
+    console.error('Unable to connect to the database -- Retrying in 5 seconds');
+    setTimeout(async () => {
+      await sequelize.authenticate();
+      console.log('Connected to TimescaleDB.');
+      await sequelize.sync();
+      console.log('Database synchronized.');
+
+      server.listen(port, () => {
+        console.log(`Server is running on port ${port}`);
+      });
+    }, 5000);
   }
 })();
