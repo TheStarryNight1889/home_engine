@@ -2,16 +2,14 @@ import 'dotenv/config';
 import express from 'express';
 import WebSocket, { Server as WebSocketServer } from 'ws';
 import http from 'http';
-import {InfluxDB, Point} from'@influxdata/influxdb-client'
+import { Sequelize} from 'sequelize';
+import { Air, defineAirModel } from './models/Air';
 
-const token = process.env.INFLUXDB_TOKEN || 'NiceToken'
-const url = process.env.INFLUXDB_URL || 'http://localhost:8086'
-const bucket = process.env.INFLUXDB_BUCKET || 'my-bucket'
-const org = process.env.INFLUXDB_ORG || 'my-org'
+const connectionString = process.env.TIMESCALEDB_CONNECTION_STRING || 'postgres://your_user:your_password@localhost:5432/your_db';
 
-const influxClient = new InfluxDB({url, token})
+const sequelize = new Sequelize(connectionString);
 
-let writeClient = influxClient.getWriteApi(org, bucket, 'ns')
+defineAirModel(sequelize);
 
 const app = express();
 const port = process.env.APP_PORT || 3000;
@@ -21,15 +19,15 @@ app.use(express.json());
 app.post('/sensor/air', async (req, res) => {
     try {
         const data = req.body;
-        const point = new Point('air')
-        .timestamp(new Date(req.body.timestamp *1000))
-        .tag('device_id', data.device_id)
-        .tag('location_id', data.location_id)
-        .floatField('temperature', data.data.temperature)
-        .floatField('humidity', data.data.humidity)
-        .floatField('co2', data.data.co2);
-        writeClient.writePoint(point);
-        await writeClient.flush();
+        console.log(data);
+        await Air.create({
+          time: new Date(data.timestamp * 1000),
+          device_id: data.device_id,
+          location_id: data.location_id,
+          temperature: data.data.temperature,
+          humidity: data.data.humidity,
+          co2: data.data.co2,
+        });
         wss.clients.forEach((client) => {
             if (client.readyState === WebSocket.OPEN) {
             client.send(JSON.stringify(req.body));
@@ -58,6 +56,17 @@ wss.on('connection', (socket) => {
   });
 });
 
-server.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connected to TimescaleDB.');
+    await sequelize.sync();
+    console.log('Database synchronized.');
+
+    server.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (err) {
+    console.error('Unable to connect to the database:', err);
+  }
+})();

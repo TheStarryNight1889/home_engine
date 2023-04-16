@@ -1,6 +1,8 @@
 services:
   curiosity:
     image: curiosity
+    networks:
+      - home_engine
     build: ./curiosity
     expose:
       - "8080"
@@ -11,17 +13,51 @@ services:
       - HOST=0.0.0.0
   hardwire:
     image: hardwire
+    networks:
+      - home_engine
     build: ./hardwire
+    environment:
+      - MQTT_HOST=mosquitto
+      - MQTT_PORT=1883
+      - MQTT_CLIENT_ID=hardwire
+      - MQTT_SENSOR_AIR=/data/sensor/air
+      - TRANSPORTER_HOST=transporter
+      - TRANSPORTER_PORT=3000
   transporter:
+    networks:
+      - home_engine
     image: transporter
     build: ./transporter
+    environment:
+      - APP_PORT=3000
     expose:
       - "3000"
   mosquitto:
     image: eclipse-mosquitto:latest
+    networks:
+      - home_engine 
     expose:
       - 1883
     ports:
       - "1883:1883"
     volumes:
       - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
+  timescaledb:
+    image: timescale/timescaledb:latest-pg13
+    container_name: timescaledb
+    environment:
+      - POSTGRES_PASSWORD=super_secret_password
+      - POSTGRES_USER=root
+      - POSTGRES_DB=home_engine
+    expose:
+      - "5432"
+    ports:
+      - "5432:5432"
+    volumes:
+      - timescaledb_data:/var/lib/postgresql/data
+  
+volumes:
+  timescaledb_data:
+networks:
+  home_engine:
+    driver: bridge

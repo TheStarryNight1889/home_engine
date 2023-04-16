@@ -71,10 +71,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                         "http://{}:{}{}",
                         transporter_host, transporter_port, mqtt_sensor_air
                     );
+                    println!("URL = {:?}", url);
 
                     let resp = foward_data(payload, &url, &http_client).await;
                     match resp {
-                        Ok(_) => {}
+                        Ok(_) => {
+                            println!("Data forwarded")
+                        }
                         Err(e) => println!("Error = {:?}", e),
                     }
                 }
