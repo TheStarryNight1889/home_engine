@@ -17,7 +17,8 @@
     "chart.js": "^4.2.1",
     "daisyui": "^2.51.3",
     "pinia": "^2.0.33",
-    "vue-chartjs": "^5.2.0"
+    "vue-chartjs": "^5.2.0",
+    "ws": "^8.13.0"
   },
   "overrides": {
     "vue": "latest"

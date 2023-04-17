@@ -16,3 +16,29 @@
         </div>
     </div>
 </template>
+
+<script>
+
+// import websocket
+import WebSocket from 'ws'
+// subscribe to ws server on localhost:3000
+const ws = new WebSocket('ws://localhost:3000/ws')
+ws.onopen = () => {
+    console.log('connected')
+}
+ws.onmessage = (msg) => {
+    console.log(msg)
+}
+ws.onclose = () => {
+    console.log('disconnected')
+}
+
+export default {
+    name: 'Index',
+    data() {
+        return {
+            ws: ws
+        }
+    }
+}
+</script>

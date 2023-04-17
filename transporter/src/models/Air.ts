@@ -1,4 +1,3 @@
-// src/models/air.ts
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 class Air extends Model {}
