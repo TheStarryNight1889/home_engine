@@ -1,10 +1,11 @@
-# Dockerfile
-FROM node:16.16.0-alpine
-
-WORKDIR /usr/src/app
-
-COPY . .
+FROM node:18.16 AS build-stage
+WORKDIR /app
+COPY package*.json ./
 RUN npm install
+COPY . .
 RUN npm run build
 
-CMD [ "node", ".output/server/index.mjs" ]
+FROM nginx:stable-alpine AS production-stage
+COPY --from=build-stage /app/dist /usr/share/nginx/html
+EXPOSE 80
+CMD ["nginx", "-g", "daemon off;"]
