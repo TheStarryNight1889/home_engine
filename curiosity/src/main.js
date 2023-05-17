@@ -12,7 +12,7 @@ const app = createApp(App)
 
 app.use(createPinia())
 
-useWs('ws://localhost:3000')
+useWs('ws://localhost:8000/ws')
 app.use(router)
 
 app.mount('#app')
