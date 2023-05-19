@@ -14,7 +14,7 @@ export function useWs(url) {
       const message = JSON.parse(event.data)
 
       // Dispatch a Vuex action or commit a mutation depending on the message type
-      if (message.type === 'messageType1') {
+      if (message.type === 'air') {
         airStore.data = message.data
       } else{
         console.log(`[useWs] message type not found: ${message.type}`)

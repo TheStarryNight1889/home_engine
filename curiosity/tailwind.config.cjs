@@ -1,10 +1,11 @@
+/* eslint-disable no-undef */
 /** @type {import('tailwindcss').Config} */
-export default  {
-  content: [],
+module.exports = {
+  content: ['./src/**/*.{vue,js,ts}'],
   theme: {
     extend: {},
   },
-  plugins: [import("daisyui")],
+  plugins: [require("daisyui")],
   purge: ['./index.html', './src/**/*.{vue,js,ts,jsx,tsx}']
 }
 

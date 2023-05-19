@@ -4,10 +4,10 @@ class Wss {
     private wss: WebSocket.Server;
     private port: number;
     private clients: WebSocket[] = [];
-    constructor(port: number) {
-        this.port = port;
+
+    private constructor() {
+        this.port = 8000;
         this.wss = new WebSocket.Server({ port: this.port, path: "/ws" });
-        console.log("WSS started on port", this.port);
     }
     public send(data: any) {
         this.clients.forEach((client) => {
@@ -18,7 +18,7 @@ class Wss {
     }
     public start(){
         try {
-            console.log("Starting WSS");
+            console.log("WSS started on port", this.port);
             this.acceptConnections();
         } catch (err) {
             console.error('Error starting WSS',err);
@@ -34,6 +34,10 @@ class Wss {
         });
     }
     public static getInstance(): Wss {
+        if (!Wss.instance) {
+            console.log("Creating new WSS instance");
+            Wss.instance = new Wss();
+        }
         return Wss.instance;
     }
 }
