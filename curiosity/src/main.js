@@ -2,6 +2,7 @@ import './app.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import VueApexCharts from "vue3-apexcharts";
 
 import { useWs } from './ws/useWs'
 
@@ -14,5 +15,7 @@ app.use(createPinia())
 
 useWs('ws://localhost:8000/ws')
 app.use(router)
+
+app.use(VueApexCharts);
 
 app.mount('#app')

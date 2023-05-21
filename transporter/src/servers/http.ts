@@ -1,6 +1,6 @@
 import express from 'express';
 import { APP_PORT } from '../config';
-import WebSocket from 'ws';
+import cors from 'cors';
 
 class Http {
   private app: express.Application;
@@ -14,10 +14,10 @@ class Http {
     this.routes = routes;
     // this.wss = wss;
   }
-
   private setMiddlewares() {
     this.app.use(express.json());
-    this.app.use(this.routes)
+    this.app.use(cors());
+    this.app.use(this.routes);
   }
 
   public start() {

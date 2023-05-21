@@ -15,7 +15,7 @@ export function useWs(url) {
 
       // Dispatch a Vuex action or commit a mutation depending on the message type
       if (message.type === 'air') {
-        airStore.data = message.data
+        airStore.setLatest(message.data)
       } else{
         console.log(`[useWs] message type not found: ${message.type}`)
       }

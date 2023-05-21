@@ -1,17 +1,16 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
+import { getSensorAir } from '../api/transporter'
 
 export const useAirsStore = defineStore('airs', () => {
-  const data = ref({
-    "time": 1634567890000,
-    "device_id": "device123",
-    "location_id": "location456",
-    "data": {
-      "temperature": 21.5,
-      "humidity": 55.3,
-      "co2": 400.2
-    }
-  })
+  const list = ref([])
+  const latest = ref({})
 
-  return { data }
+  const setList = async () => {
+    list.value = await getSensorAir()
+  }
+  const setLatest = (data) => {
+    latest.value = data
+  }
+  return { list, latest, setList, setLatest }
 })

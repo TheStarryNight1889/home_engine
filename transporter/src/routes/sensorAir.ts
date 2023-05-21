@@ -25,5 +25,14 @@ router.post('/sensor/air', async (req, res) => {
         res.sendStatus(500);
     }
 });
+router.get('/sensor/air', async (req, res) => {
+    try {
+        const data = await Air.findAll();
+        res.send(data);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+});
 
 export { router as sensorAirRouter };
