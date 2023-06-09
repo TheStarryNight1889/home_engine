@@ -8,9 +8,11 @@ export const useAirsStore = defineStore('airs', () => {
 
   const setList = async () => {
     list.value = await getSensorAir()
+    console.log(list.value)
   }
   const setLatest = (data) => {
     latest.value = data
+    console.log(latest.value)
   }
   return { list, latest, setList, setLatest }
 })

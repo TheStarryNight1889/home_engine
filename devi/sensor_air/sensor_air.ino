@@ -15,11 +15,12 @@ char pass[] = "BecauseFiSaid0k"; // your network password (use for WPA, or use a
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 
-const char broker[] = "192.168.0.10";
+const char broker[] = "192.168.0.69";
 int port = 1883;
 const char sensor_topic[] = "data/sensor/air";
 
 const String device_id = "airsensor1";
+const String location_id = "home";
 
 // set interval for sending messages (milliseconds)
 const long interval = 5000;
@@ -27,9 +28,8 @@ unsigned long previousMillis = 0;
 
 int count = 0;
 
-void setup()
-{
-  // attempt to connect to Wifi network:
+void connect_wifi(WiFiClient &wifiClient, const char *ssid, const char *pass) {
+    // attempt to connect to Wifi network:
   Serial.print("Attempting to connect to WPA SSID: ");
   Serial.println(ssid);
   while (WiFi.begin(ssid, pass) != WL_CONNECTED)
@@ -40,20 +40,26 @@ void setup()
   }
   delay(10000);
   Serial.println("WIFI Connected");
+}
 
+void connect_mqtt(MqttClient &mqttClient, const char *broker, int port)
+{
   Serial.print("Attempting to connect to the MQTT broker: ");
   Serial.println(broker);
 
-  if (!mqttClient.connect(broker, port))
+  while (!mqttClient.connect(broker, port))
   {
     Serial.print("MQTT connection failed! Error code = ");
     Serial.println(mqttClient.connectError());
 
-    while (1)
-      ;
+    Serial.println("Retrying MQTT connection in 5 seconds...");
+    delay(5000);  // wait 5 seconds
   }
   Serial.println("MQTT Connected");
+}
 
+void set_internal_clock(RTCZero &rtc)
+{
   rtc.begin();
   unsigned long epoch;
   int numberOfTries = 0, maxTries = 6;
@@ -79,10 +85,10 @@ void setup()
     rtc.setEpoch(epoch);
     Serial.println();
   }
+}
 
-  Serial.begin(115200);
-  Wire.begin();
-
+void setupSCD30(SCD30 &airSensor)
+{
   if (airSensor.begin() == false)
   {
     Serial.println("Air sensor not detected. Please check wiring. Freezing...");
@@ -101,6 +107,20 @@ void setup()
   Serial.println("Done!");
 }
 
+void setup()
+{
+  connect_wifi(wifiClient, ssid, pass);
+
+  connect_mqtt(mqttClient, broker, port);
+
+  set_internal_clock(rtc);
+
+  Serial.begin(115200);
+  Wire.begin();
+
+  setupSCD30(airSensor);
+}
+
 void loop()
 {
   // call poll() regularly to allow the library to send MQTT keep alive which
@@ -117,13 +137,15 @@ void loop()
     String timestamp = String(rtc.getEpoch());
 
     mqttClient.beginMessage(sensor_topic);
-    mqttClient.println(
-        "{\n\"timestamp\": " + timestamp + 
-        ",\n\"device_id\": " + device_id +
-        ",\n\"co2\": " + co2 +
-        ",\n\"humidity\": " + hum +
-        ",\n\"temperature\": " + temp +
-        "\n}");
+    String jsonData = "{\n\"timestamp\": " + String(timestamp) + 
+    ",\n\"device_id\": \"" + device_id + "\"" +
+    ",\n\"location_id\": \"" + location_id + "\"" +
+    ",\n\"data\": {\n\"temperature\": " + String(temp) +
+    ",\n\"humidity\": " + String(hum) +
+    ",\n\"co2\": " + String(co2) +
+    "\n}\n}";
+
+    mqttClient.println(jsonData);
     mqttClient.endMessage();
   }
   else

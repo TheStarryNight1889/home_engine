@@ -36,17 +36,18 @@ const options = {
   chart: {
     id: 'co2-chart',
     toolbar: {
-      show: false,
+      show: true,
     },
-  },
-  stroke: {
-    curve: 'smooth',
   },
   grid: {
     show: false,
   },
+  stroke: {
+    curve: 'smooth',
+  },
   xaxis: {
     type: 'datetime',
+    labels: { datetimeUTC: false }
   },
   dataLabels: {
     enabled: false,
@@ -62,10 +63,11 @@ const options = {
 const series = computed(() => {
   const data = list.value.map((item) => {
     return {
-      x: item.time,
+      x: new Date(item.time_bucket).toUTCString(),
       y: item.co2,
     }
   })
+  console.log(data)
   return [
     {
       name: 'CO2',
