@@ -6,9 +6,9 @@
 #include "SparkFun_SCD30_Arduino_Library.h"
 #include <U8g2lib.h>
 #include <SPI.h>
-#include "lib/WiFi/WiFiConnection.h"
-#include "lib/MQTT/MQTTConnection.h"
-#include "lib/MQTT/MQTTPublisher.h"
+#include "MQTTConnection.h"
+#include "WiFiConnection.h"
+#include "MQTTPublisher.h"
 
 
 U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
@@ -19,8 +19,6 @@ RTCZero rtc;
 ///////please enter your sensitive data in the Secret tab/arduino_secrets.h
 char ssid[] = "PorqueFi";        // your network SSID (name)
 char pass[] = "BecauseFiSaid0k"; // your network password (use for WPA, or use as key for WEP)
-
-MqttClient mqttClient(wifiClient);
 
 const char broker[] = "192.168.0.69";
 int port = 1883;
@@ -85,10 +83,12 @@ void setup()
   wifiConnection.connect();
   WiFiClient& wifiClient = wifiConnection.getClient();
 
+  // Mqtt connection
   MQTTConnection mqttConnection(wifiClient, broker, port);
   mqttConnection.connect();
   MqttClient& mqttClient = mqttConnection.getClient();
 
+  // Mqtt publisher
   MQTTPublisher mqttPublisher(mqttClient);
 
 
