@@ -47,7 +47,19 @@ const options = {
   },
   xaxis: {
     type: 'datetime',
-    labels: { datetimeUTC: false }
+    labels: {
+      datetimeUTC: false,
+      style: {
+        cssClass: 'fill-base-content',
+      }
+    }
+  },
+  yaxis: {
+    labels: {
+      style: {
+        cssClass: 'fill-base-content',
+      }
+    }
   },
   dataLabels: {
     enabled: false,

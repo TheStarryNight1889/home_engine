@@ -3,8 +3,16 @@
 #include <Wire.h>
 #include <RTCZero.h>
 #include <WiFiUdp.h>
-
 #include "SparkFun_SCD30_Arduino_Library.h"
+#include <U8g2lib.h>
+#include <SPI.h>
+#include "lib/WiFi/WiFiConnection.h"
+#include "lib/MQTT/MQTTConnection.h"
+#include "lib/MQTT/MQTTPublisher.h"
+
+
+U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
+
 SCD30 airSensor;
 RTCZero rtc;
 
@@ -12,7 +20,6 @@ RTCZero rtc;
 char ssid[] = "PorqueFi";        // your network SSID (name)
 char pass[] = "BecauseFiSaid0k"; // your network password (use for WPA, or use as key for WEP)
 
-WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 
 const char broker[] = "192.168.0.69";
@@ -21,42 +28,6 @@ const char sensor_topic[] = "data/sensor/air";
 
 const String device_id = "airsensor1";
 const String location_id = "home";
-
-// set interval for sending messages (milliseconds)
-const long interval = 5000;
-unsigned long previousMillis = 0;
-
-int count = 0;
-
-void connect_wifi(WiFiClient &wifiClient, const char *ssid, const char *pass) {
-    // attempt to connect to Wifi network:
-  Serial.print("Attempting to connect to WPA SSID: ");
-  Serial.println(ssid);
-  while (WiFi.begin(ssid, pass) != WL_CONNECTED)
-  {
-    // failed, retry
-    Serial.print(".");
-    delay(5000);
-  }
-  delay(10000);
-  Serial.println("WIFI Connected");
-}
-
-void connect_mqtt(MqttClient &mqttClient, const char *broker, int port)
-{
-  Serial.print("Attempting to connect to the MQTT broker: ");
-  Serial.println(broker);
-
-  while (!mqttClient.connect(broker, port))
-  {
-    Serial.print("MQTT connection failed! Error code = ");
-    Serial.println(mqttClient.connectError());
-
-    Serial.println("Retrying MQTT connection in 5 seconds...");
-    delay(5000);  // wait 5 seconds
-  }
-  Serial.println("MQTT Connected");
-}
 
 void set_internal_clock(RTCZero &rtc)
 {
@@ -109,9 +80,19 @@ void setupSCD30(SCD30 &airSensor)
 
 void setup()
 {
-  connect_wifi(wifiClient, ssid, pass);
+  // Wifi connection
+  WiFiConnection wifiConnection(ssid, pass);
+  wifiConnection.connect();
+  WiFiClient& wifiClient = wifiConnection.getClient();
 
-  connect_mqtt(mqttClient, broker, port);
+  MQTTConnection mqttConnection(wifiClient, broker, port);
+  mqttConnection.connect();
+  MqttClient& mqttClient = mqttConnection.getClient();
+
+  MQTTPublisher mqttPublisher(mqttClient);
+
+
+  u8g2.begin();
 
   set_internal_clock(rtc);
 
@@ -135,6 +116,17 @@ void loop()
     String hum = String(airSensor.getHumidity());
     String temp = String(airSensor.getTemperature());
     String timestamp = String(rtc.getEpoch());
+
+    String co2Str = "CO2: " + co2;
+    String tempStr = "Temp: " + temp;
+      String humStr = "Hum: " + hum;
+    
+    u8g2.clearBuffer();                   // clear the internal memory
+    u8g2.setFont(u8g2_font_ncenB08_tr);   // choose a suitable font
+    u8g2.drawStr(0, 10, co2Str.c_str());    // write CO2 to the internal memory
+    u8g2.drawStr(0, 20, tempStr.c_str());   // write Temp to the internal memory
+    u8g2.drawStr(0, 30, humStr.c_str());    // write Hum to the internal memory
+    u8g2.sendBuffer();                    // transfer internal memory to the display
 
     mqttClient.beginMessage(sensor_topic);
     String jsonData = "{\n\"timestamp\": " + String(timestamp) + 
