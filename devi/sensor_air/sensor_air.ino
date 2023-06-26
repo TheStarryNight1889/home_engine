@@ -10,22 +10,24 @@
 #include "WiFiConnection.h"
 #include "MQTTPublisher.h"
 
+// TODO: move the values to a config file 
+const char WIFI_SSID[] = "PorqueFi";
+const char WIFI_PASSWORD[] = "BecauseFiSaid0k";
+
+const char MQTT_BROKER[] = "192.168.0.69";
+const int MQTT_PORT = 1883;
+const char MQTT_AIR_SENSOR_TOPIC[] = "data/sensor/air";
+
+const String DEVICE_ID = "airsensor1";
+const String DEVICE_LOCATION_ID = "home";
 
 U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
-
 SCD30 airSensor;
 RTCZero rtc;
-
-///////please enter your sensitive data in the Secret tab/arduino_secrets.h
-char ssid[] = "PorqueFi";        // your network SSID (name)
-char pass[] = "BecauseFiSaid0k"; // your network password (use for WPA, or use as key for WEP)
-
-const char broker[] = "192.168.0.69";
-int port = 1883;
-const char sensor_topic[] = "data/sensor/air";
-
-const String device_id = "airsensor1";
-const String location_id = "home";
+WiFiConnection wifiConnection(WIFI_SSID, WIFI_PASSWORD);
+MQTTConnection mqttConnection;
+MQTTPublisher mqttPublisher;
+MqttClient mqttClient;
 
 void set_internal_clock(RTCZero &rtc)
 {
@@ -79,18 +81,16 @@ void setupSCD30(SCD30 &airSensor)
 void setup()
 {
   // Wifi connection
-  WiFiConnection wifiConnection(ssid, pass);
   wifiConnection.connect();
   WiFiClient& wifiClient = wifiConnection.getClient();
 
   // Mqtt connection
-  MQTTConnection mqttConnection(wifiClient, broker, port);
+  mqttConnection = MQTTConnection(wifiClient, MQTT_BROKER, MQTT_PORT);
   mqttConnection.connect();
-  MqttClient& mqttClient = mqttConnection.getClient();
-
+  mqttClient = mqttConnection.getClient();
+  
   // Mqtt publisher
-  MQTTPublisher mqttPublisher(mqttClient);
-
+  mqttPublisher = MQTTPublisher(mqttClient);
 
   u8g2.begin();
 
@@ -128,10 +128,10 @@ void loop()
     u8g2.drawStr(0, 30, humStr.c_str());    // write Hum to the internal memory
     u8g2.sendBuffer();                    // transfer internal memory to the display
 
-    mqttClient.beginMessage(sensor_topic);
+    mqttClient.beginMessage(MQTT_AIR_SENSOR_TOPIC);
     String jsonData = "{\n\"timestamp\": " + String(timestamp) + 
-    ",\n\"device_id\": \"" + device_id + "\"" +
-    ",\n\"location_id\": \"" + location_id + "\"" +
+    ",\n\"device_id\": \"" + DEVICE_ID + "\"" +
+    ",\n\"location_id\": \"" + DEVICE_LOCATION_ID + "\"" +
     ",\n\"data\": {\n\"temperature\": " + String(temp) +
     ",\n\"humidity\": " + String(hum) +
     ",\n\"co2\": " + String(co2) +
@@ -142,7 +142,7 @@ void loop()
   }
   else
   {
-    mqttClient.beginMessage(sensor_topic);
+    mqttClient.beginMessage(MQTT_AIR_SENSOR_TOPIC);
     mqttClient.print("null");
     mqttClient.print("null");
     mqttClient.print("null");
