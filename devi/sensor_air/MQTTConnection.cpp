@@ -3,6 +3,7 @@
 MQTTConnection::MQTTConnection(WiFiClient& wifiClient, const char* broker, int port) 
 : wifiClient(wifiClient), broker(broker), port(port), mqttClient(wifiClient) {}
 
+
 void MQTTConnection::connect() {
   if(mqttClient.connected())
     return;

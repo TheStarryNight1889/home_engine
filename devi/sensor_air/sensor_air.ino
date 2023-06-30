@@ -24,10 +24,19 @@ const String DEVICE_LOCATION_ID = "home";
 U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 SCD30 airSensor;
 RTCZero rtc;
+
+// Wifi connection
 WiFiConnection wifiConnection(WIFI_SSID, WIFI_PASSWORD);
-MQTTConnection mqttConnection;
-MQTTPublisher mqttPublisher;
-MqttClient mqttClient;
+wifiConnection.connect();
+WiFiClient& wifiClient = wifiConnection.getClient();
+
+// Mqtt connection
+MQTTConnection mqttConnection(wifiClient, MQTT_BROKER, MQTT_PORT);
+mqttConnection.connect();
+MqttClient& mqttClient = mqttConnection.getClient();
+
+// Mqtt publisher
+MQTTPublisher mqttPublisher(mqttClient);
 
 void set_internal_clock(RTCZero &rtc)
 {
@@ -80,18 +89,6 @@ void setupSCD30(SCD30 &airSensor)
 
 void setup()
 {
-  // Wifi connection
-  wifiConnection.connect();
-  WiFiClient& wifiClient = wifiConnection.getClient();
-
-  // Mqtt connection
-  mqttConnection = MQTTConnection(wifiClient, MQTT_BROKER, MQTT_PORT);
-  mqttConnection.connect();
-  mqttClient = mqttConnection.getClient();
-  
-  // Mqtt publisher
-  mqttPublisher = MQTTPublisher(mqttClient);
-
   u8g2.begin();
 
   set_internal_clock(rtc);
