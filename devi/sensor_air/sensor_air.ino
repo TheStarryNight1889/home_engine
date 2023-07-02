@@ -47,21 +47,25 @@ State state = DISCONNECTED;
 
 void setup()
 {
-  connectToMqtt();
+  Serial.begin(9600);
+  delay(10000);
+  Serial.println("--- Beggining Setup ---");
   connectToWifi();
+  connectToMqtt();
 
   u8g2.begin();
 
   setInternalClock(rtc);
 
-  Serial.begin(115200);
   Wire.begin();
 
   setupSCD30(airSensor);
+  Serial.println("--- End of Setup ---");
 }
 
 void loop()
 {
+  Serial.println("--- PASS START ---");
   switch (state)
   {
     case DISCONNECTED:
@@ -79,7 +83,7 @@ void loop()
           String co2Str = "CO2: " + co2;
           String tempStr = "Temp: " + temp;
           String humStr = "Hum: " + hum;
-
+          Serial.println("No Connection -- Printing to screen only");
           displayAirReads(co2Str, tempStr, humStr);
         }
         connectToWifi();
@@ -98,6 +102,7 @@ void loop()
         String tempStr = "Temp: " + temp;
         String humStr = "Hum: " + hum;
 
+        Serial.println("Connected -- Printing & Publishing");
         displayAirReads(co2Str, tempStr, humStr);
         mqttClient.poll();
         String jsonData = createJSON(timestamp, temp, hum, co2);
@@ -109,7 +114,8 @@ void loop()
   default:
     break;
   }
-  delay(5000);
+  Serial.println("--- PASS END ---");
+  delay(4000);
 }
 
 void setInternalClock(RTCZero &rtc)
@@ -165,15 +171,23 @@ void connectToWifi()
 {
   Serial.print("Connecting to ");
   Serial.println(WIFI_SSID);
-
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-
-  while (WiFi.status() != WL_CONNECTED)
+  
+  int attempts = 0;
+  while (attempts < 3 && WiFi.status() != WL_CONNECTED)
   {
     delay(500);
-    Serial.print(".");
+    attempts++;
   }
-  Serial.println("WiFi connected");
+
+  if (WiFi.status() == WL_CONNECTED)
+  {
+    Serial.println("WiFi connected");
+  }
+  else
+  {
+    Serial.println("WiFi connection failed");
+  }
 }
 
 void connectToMqtt()
@@ -183,15 +197,23 @@ void connectToMqtt()
   Serial.print(":");
   Serial.println(MQTT_PORT);
 
+  int attempts = 0;
   mqttClient.connect(MQTT_BROKER, MQTT_PORT);
-  while (!mqttClient.connected())
+  while (attempts < 3 && !mqttClient.connected())
   {
-    Serial.print(".");
     delay(500);
+    attempts++;
   }
-  Serial.println("MQTT connected");
-}
 
+  if (mqttClient.connected())
+  {
+    Serial.println("MQTT connected");
+  }
+  else
+  {
+    Serial.println("MQTT connection failed");
+  }
+}
 void publishMessage(String topic, String message)
 {
   mqttClient.beginMessage(topic);
