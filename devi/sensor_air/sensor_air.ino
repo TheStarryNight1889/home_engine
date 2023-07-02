@@ -34,6 +34,7 @@ void connectToWifi();
 void connectToMqtt();
 void publishMessage(String topic, String message);
 void displayAirReads(String co2Str, String tempStr, String humStr);
+void displayMessage(String message);
 String createJSON(String timestamp, String temp, String hum, String co2);
 
 // States
@@ -48,16 +49,22 @@ State state = DISCONNECTED;
 void setup()
 {
   Serial.begin(9600);
-  delay(10000);
-  Serial.println("--- Beggining Setup ---");
-  connectToWifi();
-  connectToMqtt();
-
   u8g2.begin();
-
-  setInternalClock(rtc);
-
   Wire.begin();
+
+  delay(8000);
+  
+  Serial.println("--- Beggining Setup ---");
+  displayMessage("Initializing");
+  delay(1000);
+  displayMessage("Connecting to WiFi");
+  connectToWifi();
+  displayMessage("Connecting to NTP");
+  setInternalClock(rtc);
+  displayMessage("Connecting to MQTT");
+  connectToMqtt();
+  displayMessage("Done");
+  delay(1000);
 
   setupSCD30(airSensor);
   Serial.println("--- End of Setup ---");
@@ -87,6 +94,7 @@ void loop()
           displayAirReads(co2Str, tempStr, humStr);
         }
         connectToWifi();
+        setInternalClock(rtc);
         connectToMqtt();
       }
     break;
@@ -121,29 +129,27 @@ void loop()
 void setInternalClock(RTCZero &rtc)
 {
   rtc.begin();
-  unsigned long epoch;
-  int numberOfTries = 0, maxTries = 6;
+  unsigned long epoch = 0;
+  int numberOfTries = 0;
+  const int maxTries = 6;
 
-  do
+  Serial.println("Connecting to NTP server");
+
+  while ((epoch == 0) && (numberOfTries < maxTries))
   {
-    Serial.println(WiFi.getTime());
     epoch = WiFi.getTime();
     numberOfTries++;
+    delay(500);
   }
 
-  while ((epoch == 0) && (numberOfTries < maxTries));
   if (numberOfTries == maxTries)
   {
-    Serial.print("NTP unreachable!!");
-    while (1)
-      ;
+    Serial.println("NTP Server connection failed");
   }
   else
   {
-    Serial.print("Epoch received: ");
-    Serial.println(epoch);
+    Serial.println("NTP Server connected ");
     rtc.setEpoch(epoch);
-    Serial.println();
   }
 }
 
@@ -169,7 +175,7 @@ void setupSCD30(SCD30 &airSensor)
 
 void connectToWifi()
 {
-  Serial.print("Connecting to ");
+  Serial.print("Connecting to WiFi network ");
   Serial.println(WIFI_SSID);
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
   
@@ -229,6 +235,13 @@ void displayAirReads(String co2Str, String tempStr, String humStr)
     u8g2.drawStr(0, 20, tempStr.c_str());
     u8g2.drawStr(0, 30, humStr.c_str());
     u8g2.sendBuffer();
+}
+
+void displayMessage(String message){
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_ncenB08_tr);
+  u8g2.drawStr(0, 10, message.c_str());
+  u8g2.sendBuffer();
 }
 
 String createJSON(String timestamp, String temp, String hum, String co2) {
