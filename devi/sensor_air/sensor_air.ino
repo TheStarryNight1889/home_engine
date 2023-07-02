@@ -27,7 +27,61 @@ RTCZero rtc;
 WiFiClient wifiClient;
 MqttClient mqttClient(wifiClient);
 
-void set_internal_clock(RTCZero &rtc)
+// Function declarations
+void setInternalClock(RTCZero &rtc);
+void setupSCD30(SCD30 &airSensor);
+void connectToWifi();
+void connectToMqtt();
+void publishMessage(String topic, String message);
+void displayAirReads(String co2Str, String tempStr, String humStr);
+String createJSON(String timestamp, String temp, String hum, String co2);
+
+void setup()
+{
+  connectToMqtt();
+  connectToWifi();
+
+  u8g2.begin();
+
+  setInternalClock(rtc);
+
+  Serial.begin(115200);
+  Wire.begin();
+
+  setupSCD30(airSensor);
+}
+
+void loop()
+{
+  mqttClient.poll();
+
+  if (airSensor.dataAvailable())
+  {
+    String co2 = String(airSensor.getCO2());
+    String hum = String(airSensor.getHumidity());
+    String temp = String(airSensor.getTemperature());
+    String timestamp = String(rtc.getEpoch());
+
+    String co2Str = "CO2: " + co2;
+    String tempStr = "Temp: " + temp;
+    String humStr = "Hum: " + hum;
+
+    String jsonData = createJSON(timestamp, temp, hum, co2);
+
+    displayAirReads(co2Str, tempStr, humStr);
+    publishMessage(MQTT_AIR_SENSOR_TOPIC, jsonData);
+  }
+  else
+  {
+    Serial.println("No data available");
+    String jsonData = createJSON("0", "0", "0", "0");
+    publishMessage(MQTT_AIR_SENSOR_TOPIC, jsonData);
+  }
+  // save the last time a message was sent
+  delay(5000);
+}
+
+void setInternalClock(RTCZero &rtc)
 {
   rtc.begin();
   unsigned long epoch;
@@ -76,76 +130,62 @@ void setupSCD30(SCD30 &airSensor)
   Serial.println("Done!");
 }
 
-void setup()
+void connectToWifi()
 {
-  // configure MQTT client
-  mqttClient.connect(MQTT_BROKER, MQTT_PORT);
-  
-  // configure WiFi connection
+  Serial.print("Connecting to ");
+  Serial.println(WIFI_SSID);
+
   WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+
   while (WiFi.status() != WL_CONNECTED)
   {
     delay(500);
-    Serial.println("Connecting to WiFi..");
+    Serial.print(".");
   }
-
-  Serial.println("Connected to the WiFi network");
-  u8g2.begin();
-
-  set_internal_clock(rtc);
-
-  Serial.begin(115200);
-  Wire.begin();
-
-  setupSCD30(airSensor);
+  Serial.println("WiFi connected");
 }
 
-void loop()
+void connectToMqtt()
 {
-  // call poll() regularly to allow the library to send MQTT keep alive which
-  // avoids being disconnected by the broker
-  mqttClient.poll();
+  Serial.print("Connecting to MQTT broker at ");
+  Serial.print(MQTT_BROKER);
+  Serial.print(":");
+  Serial.println(MQTT_PORT);
 
-  Serial.println(airSensor.dataAvailable());
-
-  if (airSensor.dataAvailable())
+  mqttClient.connect(MQTT_BROKER, MQTT_PORT);
+  while (!mqttClient.connected())
   {
-    String co2 = String(airSensor.getCO2());
-    String hum = String(airSensor.getHumidity());
-    String temp = String(airSensor.getTemperature());
-    String timestamp = String(rtc.getEpoch());
-
-    String co2Str = "CO2: " + co2;
-    String tempStr = "Temp: " + temp;
-      String humStr = "Hum: " + hum;
-    
-    u8g2.clearBuffer();                   // clear the internal memory
-    u8g2.setFont(u8g2_font_ncenB08_tr);   // choose a suitable font
-    u8g2.drawStr(0, 10, co2Str.c_str());    // write CO2 to the internal memory
-    u8g2.drawStr(0, 20, tempStr.c_str());   // write Temp to the internal memory
-    u8g2.drawStr(0, 30, humStr.c_str());    // write Hum to the internal memory
-    u8g2.sendBuffer();                    // transfer internal memory to the display
-
-    mqttClient.beginMessage(MQTT_AIR_SENSOR_TOPIC);
-    String jsonData = "{\n\"timestamp\": " + String(timestamp) + 
-    ",\n\"device_id\": \"" + DEVICE_ID + "\"" +
-    ",\n\"location_id\": \"" + DEVICE_LOCATION_ID + "\"" +
-    ",\n\"data\": {\n\"temperature\": " + String(temp) +
-    ",\n\"humidity\": " + String(hum) +
-    ",\n\"co2\": " + String(co2) +
-    "\n}\n}";
-
-    mqttClient.println(jsonData);
-    mqttClient.endMessage();
+    Serial.print(".");
+    delay(500);
   }
-  else
-  {
-    mqttClient.beginMessage(MQTT_AIR_SENSOR_TOPIC);
-    mqttClient.print("null");
-    mqttClient.print("null");
-    mqttClient.print("null");
-    mqttClient.endMessage();
-  }
-  // save the last time a message was sent
-  delay(5000);
+  Serial.println("MQTT connected");
+}
+
+void publishMessage(String topic, String message)
+{
+  mqttClient.beginMessage(topic);
+  mqttClient.println(message);
+  mqttClient.endMessage();
+}
+
+void displayAirReads(String co2Str, String tempStr, String humStr)
+{
+    u8g2.clearBuffer();
+    u8g2.setFont(u8g2_font_ncenB08_tr);
+    u8g2.drawStr(0, 10, co2Str.c_str());
+    u8g2.drawStr(0, 20, tempStr.c_str());
+    u8g2.drawStr(0, 30, humStr.c_str());
+    u8g2.sendBuffer();
+}
+
+String createJSON(String timestamp, String temp, String hum, String co2) {
+  String jsonData = "{\n\"timestamp\": " + timestamp + 
+  ",\n\"device_id\": \"" + DEVICE_ID + "\"" +
+  ",\n\"location_id\": \"" + DEVICE_LOCATION_ID + "\"" +
+  ",\n\"data\": {\n\"temperature\": " + temp +
+  ",\n\"humidity\": " + hum +
+  ",\n\"co2\": " + co2 +
+  "\n}\n}";
+  
+  return jsonData;
 }
