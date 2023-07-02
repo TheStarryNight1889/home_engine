@@ -1,5 +1,5 @@
 import { Sequelize} from 'sequelize';
-import { Models } from '../models/index';
+import { Models } from '../models/';
 import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from '../config';
 
 class DB {
