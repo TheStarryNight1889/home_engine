@@ -6,9 +6,6 @@
 #include "SparkFun_SCD30_Arduino_Library.h"
 #include <U8g2lib.h>
 #include <SPI.h>
-#include "MQTTConnection.h"
-#include "WiFiConnection.h"
-#include "MQTTPublisher.h"
 
 // TODO: move the values to a config file 
 const char WIFI_SSID[] = "PorqueFi";
@@ -21,22 +18,14 @@ const char MQTT_AIR_SENSOR_TOPIC[] = "data/sensor/air";
 const String DEVICE_ID = "airsensor1";
 const String DEVICE_LOCATION_ID = "home";
 
+// Devices
 U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 SCD30 airSensor;
+
+// Connections
 RTCZero rtc;
-
-// Wifi connection
-WiFiConnection wifiConnection(WIFI_SSID, WIFI_PASSWORD);
-wifiConnection.connect();
-WiFiClient& wifiClient = wifiConnection.getClient();
-
-// Mqtt connection
-MQTTConnection mqttConnection(wifiClient, MQTT_BROKER, MQTT_PORT);
-mqttConnection.connect();
-MqttClient& mqttClient = mqttConnection.getClient();
-
-// Mqtt publisher
-MQTTPublisher mqttPublisher(mqttClient);
+WiFiClient wifiClient;
+MqttClient mqttClient(wifiClient);
 
 void set_internal_clock(RTCZero &rtc)
 {
@@ -89,6 +78,18 @@ void setupSCD30(SCD30 &airSensor)
 
 void setup()
 {
+  // configure MQTT client
+  mqttClient.connect(MQTT_BROKER, MQTT_PORT);
+  
+  // configure WiFi connection
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    delay(500);
+    Serial.println("Connecting to WiFi..");
+  }
+
+  Serial.println("Connected to the WiFi network");
   u8g2.begin();
 
   set_internal_clock(rtc);
