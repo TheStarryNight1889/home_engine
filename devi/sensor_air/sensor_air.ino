@@ -36,6 +36,15 @@ void publishMessage(String topic, String message);
 void displayAirReads(String co2Str, String tempStr, String humStr);
 String createJSON(String timestamp, String temp, String hum, String co2);
 
+// States
+enum State
+{
+  CONNECTED,
+  DISCONNECTED,
+};
+
+State state = DISCONNECTED;
+
 void setup()
 {
   connectToMqtt();
@@ -53,31 +62,53 @@ void setup()
 
 void loop()
 {
-  mqttClient.poll();
-
-  if (airSensor.dataAvailable())
+  switch (state)
   {
-    String co2 = String(airSensor.getCO2());
-    String hum = String(airSensor.getHumidity());
-    String temp = String(airSensor.getTemperature());
-    String timestamp = String(rtc.getEpoch());
+    case DISCONNECTED:
+      if (WiFi.status() == WL_CONNECTED && mqttClient.connected())
+      {
+        state = CONNECTED;
+      } else {
+        if (airSensor.dataAvailable())
+        {
+          String co2 = String(airSensor.getCO2());
+          String hum = String(airSensor.getHumidity());
+          String temp = String(airSensor.getTemperature());
+          String timestamp = String(rtc.getEpoch());
 
-    String co2Str = "CO2: " + co2;
-    String tempStr = "Temp: " + temp;
-    String humStr = "Hum: " + hum;
+          String co2Str = "CO2: " + co2;
+          String tempStr = "Temp: " + temp;
+          String humStr = "Hum: " + hum;
 
-    String jsonData = createJSON(timestamp, temp, hum, co2);
+          displayAirReads(co2Str, tempStr, humStr);
+        }
+        connectToWifi();
+        connectToMqtt();
+      }
+    break;
+    case CONNECTED:
+      if (airSensor.dataAvailable() && WiFi.status() == WL_CONNECTED && mqttClient.connected())
+      {
+        String co2 = String(airSensor.getCO2());
+        String hum = String(airSensor.getHumidity());
+        String temp = String(airSensor.getTemperature());
+        String timestamp = String(rtc.getEpoch());
 
-    displayAirReads(co2Str, tempStr, humStr);
-    publishMessage(MQTT_AIR_SENSOR_TOPIC, jsonData);
+        String co2Str = "CO2: " + co2;
+        String tempStr = "Temp: " + temp;
+        String humStr = "Hum: " + hum;
+
+        displayAirReads(co2Str, tempStr, humStr);
+        mqttClient.poll();
+        String jsonData = createJSON(timestamp, temp, hum, co2);
+        publishMessage(MQTT_AIR_SENSOR_TOPIC, jsonData);
+      } else{
+        state = DISCONNECTED;
+      }
+      break;
+  default:
+    break;
   }
-  else
-  {
-    Serial.println("No data available");
-    String jsonData = createJSON("0", "0", "0", "0");
-    publishMessage(MQTT_AIR_SENSOR_TOPIC, jsonData);
-  }
-  // save the last time a message was sent
   delay(5000);
 }
 
