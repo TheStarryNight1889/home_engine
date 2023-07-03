@@ -27,9 +27,10 @@ import { useAirsStore } from '@/stores/airs'
 import { storeToRefs } from 'pinia';
 
 const airStore = useAirsStore();
+const selectedDevice = '123456'
 const { list, latest } = storeToRefs(airStore);
 onMounted(async () => {
-  await airStore.setList();
+  await airStore.setList(selectedDevice);
 });
 
 const options = {
