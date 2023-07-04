@@ -6,13 +6,11 @@ class Http {
   private app: express.Application;
   private port: number;
   private routes: any;
-  // private wss: WebSocket.Server;
 
   constructor(routes: any[]) {
     this.app = express();
     this.port = APP_PORT;
     this.routes = routes;
-    // this.wss = wss;
   }
   private setMiddlewares() {
     this.app.use(express.json());
