@@ -8,18 +8,23 @@ router.post('/device/handshake', async (req, res) => {
     try {
         const data = req.body;
         console.log(data);
+
+        // TODO: this is shit -> create some DTO or something
         let body = {
           device_id: data.device_id,
-          location_id: data.location_id,
           device_type: data.device_type,
           device_version: data.device_version
         }
-        if(!await checkDevice(data.device_id)) {
-            await Device.create(body);
-            await createConnectionStatus(data.device_id);
-        }
-        else {
-            await setConnectionStatus(data.device_id, true);
+
+        let [device, created] = await Device.findOrCreate({
+            where: { device_id: body.device_id },
+            defaults: body
+        });
+
+        if(device && created){
+            await DeviceConnection.create({ device_id: body.device_id, status: true });
+        } else if(device && !created) {
+            await DeviceConnection.update({ status: true }, { where: { device_id: body.device_id } });
         }
         res.sendStatus(200);
     } catch (err) {
@@ -27,28 +32,5 @@ router.post('/device/handshake', async (req, res) => {
         res.sendStatus(500);
     }
 });
-
-function checkDevice(device_id: string) {
-    return Device.findOne({
-        where: {
-            device_id: device_id
-        }
-    });
-}
-function createConnectionStatus(device_id: string) {
-    return DeviceConnection.create({
-        device_id: device_id,
-        status: true
-    });
-}
-function setConnectionStatus(device_id: string, status: boolean) {
-    return DeviceConnection.update({
-        status: status
-    }, {
-        where: {
-            device_id: device_id
-        }
-    });
-}
 
 export { router as deviceRouter };

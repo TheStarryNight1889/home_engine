@@ -8,10 +8,7 @@ const defineDeviceModel = (sequelize: Sequelize) => {
       device_id: {
         type: DataTypes.STRING,
         allowNull: false,
-      },
-      location_id: {
-        type: DataTypes.STRING,
-        allowNull: false,
+        unique: true,
       },
       device_type: {
         type: DataTypes.STRING,

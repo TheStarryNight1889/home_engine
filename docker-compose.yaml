@@ -14,6 +14,7 @@ services:
     container_name: hardwire
     depends_on:
       - mosquitto
+      - transporter
     image: hardwire
     networks:
       - home_engine
@@ -29,7 +30,6 @@ services:
     container_name: transporter
     depends_on:
       - timescaledb
-      - hardwire
     networks:
       - home_engine
     image: transporter

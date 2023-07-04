@@ -24,9 +24,9 @@ class DB {
         }
     }
     private async connect(): Promise<void>{
+        await Models.build(this.sequelize);
         await this.sequelize.authenticate()
         await this.sequelize.sync();
-        Models.build(this.sequelize);
     }
 }
 
