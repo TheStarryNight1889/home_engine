@@ -1,7 +1,7 @@
 package models
 
 type DeviceHandshake struct {
-	DeviceMessage
-	DeviceType    string
-	DeviceVersion string
+	DeviceMessage `json:",inline"`
+	DeviceType    string `json:"device_type"`
+	DeviceVersion string `json:"device_version"`
 }
