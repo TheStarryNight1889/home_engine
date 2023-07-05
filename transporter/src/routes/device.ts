@@ -7,7 +7,6 @@ const router = express.Router();
 router.post('/device/handshake', async (req, res) => {
     try {
         const data = req.body;
-        console.log(data);
 
         // TODO: this is shit -> create some DTO or something
         let body = {
@@ -32,5 +31,16 @@ router.post('/device/handshake', async (req, res) => {
         res.sendStatus(500);
     }
 });
+
+router.post('/device/lwt', async (req, res) => {
+    try{
+        const data = req.body;
+        await DeviceConnection.update({ status: false }, { where: { device_id: data.device_id } });
+        res.sendStatus(200);
+    }catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+})
 
 export { router as deviceRouter };
