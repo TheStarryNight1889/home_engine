@@ -8,15 +8,17 @@
 #include <SPI.h>
 
 // TODO: move the values to a config file 
+const String DEVICE_ID = "airsensor1";
+const String DEVICE_LOCATION_ID = "home";
+
 const char WIFI_SSID[] = "PorqueFi";
 const char WIFI_PASSWORD[] = "BecauseFiSaid0k";
 
 const char MQTT_BROKER[] = "192.168.0.69";
 const int MQTT_PORT = 1883;
 const char MQTT_AIR_SENSOR_TOPIC[] = "data/sensor/air";
-
-const String DEVICE_ID = "airsensor1";
-const String DEVICE_LOCATION_ID = "home";
+const char willTopic[] = "device/" + DEVICE_ID + "/lwt";
+const char willMessage[] = "{\"status\": \"offline\"}";
 
 // Devices
 U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
@@ -204,6 +206,7 @@ void connectToMqtt()
   Serial.println(MQTT_PORT);
 
   int attempts = 0;
+  mqttClient.setWill(willTopic, willMessage);
   mqttClient.connect(MQTT_BROKER, MQTT_PORT);
   while (attempts < 3 && !mqttClient.connected())
   {

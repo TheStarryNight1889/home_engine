@@ -10,7 +10,7 @@ class DB {
             host: DB_HOST,
             port: DB_PORT,
             dialect: 'postgres',
-            logging: false, // Set this to true if you want to see SQL queries in the console
+            logging: false,
           });
     }
 
