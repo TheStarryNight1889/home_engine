@@ -13,6 +13,7 @@ type Env struct {
 	MqttClientID        string
 	MqttSensorAir       string
 	MqttDeviceHandshake string
+	MqttDeviceLWT       string
 	TransporterHost     string
 	TransporterPort     string
 }
@@ -46,6 +47,7 @@ func NewEnv() *Env {
 		MqttClientID:        GetEnv("MQTT_CLIENT_ID"),
 		MqttSensorAir:       GetEnv("MQTT_SENSOR_AIR"),
 		MqttDeviceHandshake: GetEnv("MQTT_DEVICE_HANDSHAKE"),
+		MqttDeviceLWT:       GetEnv("MQTT_DEVICE_LWT"),
 		TransporterHost:     GetEnv("TRANSPORTER_HOST"),
 		TransporterPort:     GetEnv("TRANSPORTER_PORT"),
 	}

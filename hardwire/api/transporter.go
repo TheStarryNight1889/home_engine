@@ -72,3 +72,27 @@ func (tc *TransporterClient) PostDeviceHandshake(data models.DeviceHandshake) er
 
 	return nil
 }
+
+func (tc *TransporterClient) PostDeviceLWT(data models.DeviceLWT) error {
+	u := url.URL{
+		Scheme: "http",
+		Host:   tc.Host + ":" + tc.Port,
+		Path:   "/device/lwt",
+	}
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		return err
+	}
+
+	resp, err := tc.HttpClient.Post(u.String(), "application/json", bytes.NewReader(jsonData))
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	body, _ := ioutil.ReadAll(resp.Body)
+	fmt.Printf("Request sent to server: %s with status: %s and response: %s\n", u.String(), resp.Status, string(body))
+
+	return nil
+}
