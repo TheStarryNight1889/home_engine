@@ -30,6 +30,11 @@ func main() {
 		log.Fatal(token.Error())
 	}
 
+	token = mqttOp.Subscribe(env.MqttDeviceLWT, 0, handlers.DeviceLWTHandler)
+	if token.Wait() && token.Error() != nil {
+		log.Fatal(token.Error())
+	}
+
 	for {
 		time.Sleep(1 * time.Second)
 	}
