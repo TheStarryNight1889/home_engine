@@ -36,6 +36,7 @@ router.post('/device/lwt', async (req, res) => {
     try{
         const data = req.body;
         await DeviceConnection.update({ status: false }, { where: { device_id: data.device_id } });
+        console.log(`device ${data.device_id} lost connection`)
         res.sendStatus(200);
     }catch (err) {
         console.error(err);

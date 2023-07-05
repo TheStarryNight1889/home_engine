@@ -24,6 +24,8 @@ services:
       - MQTT_PORT=1883
       - MQTT_CLIENT_ID=hardwire
       - MQTT_SENSOR_AIR=data/sensor/air
+      - MQTT_DEVICE_HANDSHAKE=device/handshake
+      - MQTT_DEVICE_LWT=device/+/lwt
       - TRANSPORTER_HOST=transporter
       - TRANSPORTER_PORT=3000
   transporter:

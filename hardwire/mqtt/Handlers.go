@@ -39,6 +39,7 @@ func (h *Handlers) DeviceHandshakeHandler(client mqtt.Client, msg mqtt.Message) 
 }
 
 func (h *Handlers) DeviceLWTHandler(client mqtt.Client, msg mqtt.Message) {
+	log.Println("DeviceLWTHandler")
 	data := models.DeviceLWT{}
 	topic := msg.Topic()
 	deviceID := strings.Split(topic, "/")[1]
