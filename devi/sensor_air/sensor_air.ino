@@ -9,7 +9,8 @@
 
 // TODO: move the values to a config file 
 const String DEVICE_ID = "airsensor1";
-const String DEVICE_LOCATION_ID = "home";
+const String DEVICE_TYPE = "air_sensor";
+const String DEVICE_VERSION = "0.0.0";
 
 const char WIFI_SSID[] = "PorqueFi";
 const char WIFI_PASSWORD[] = "BecauseFiSaid0k";
@@ -17,9 +18,9 @@ const char WIFI_PASSWORD[] = "BecauseFiSaid0k";
 const char MQTT_BROKER[] = "192.168.0.69";
 const int MQTT_PORT = 1883;
 const char MQTT_AIR_SENSOR_TOPIC[] = "data/sensor/air";
-const char willTopic[] = "device/" + DEVICE_ID + "/lwt";
-const char willMessage[] = "{\"status\": \"offline\"}";
-
+const char MQTT_LWT_TOPIC[] = "device/" + DEVICE_ID + "/lwt";
+const char MQTT_LWT_MESSAGE[] = "{\"status\": \"offline\"}";
+const char MQTT_HANDSHAKE_TOPIC[] = "device/" + DEVICE_ID + "/handshake";
 // Devices
 U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 SCD30 airSensor;
@@ -206,7 +207,7 @@ void connectToMqtt()
   Serial.println(MQTT_PORT);
 
   int attempts = 0;
-  mqttClient.setWill(willTopic, willMessage);
+  mqttClient.setWill(MQTT_LWT_TOPIC, MQTT_LWT_MESSAGE);
   mqttClient.connect(MQTT_BROKER, MQTT_PORT);
   while (attempts < 3 && !mqttClient.connected())
   {
@@ -217,6 +218,7 @@ void connectToMqtt()
   if (mqttClient.connected())
   {
     Serial.println("MQTT connected");
+    mqttClient.publish(MQTT_HANDSHAKE_TOPIC, createHandshakeJSON(DEVICE_TYPE, DEVICE_VERSION)
   }
   else
   {
@@ -250,11 +252,19 @@ void displayMessage(String message){
 String createJSON(String timestamp, String temp, String hum, String co2) {
   String jsonData = "{\n\"timestamp\": " + timestamp + 
   ",\n\"device_id\": \"" + DEVICE_ID + "\"" +
-  ",\n\"location_id\": \"" + DEVICE_LOCATION_ID + "\"" +
   ",\n\"data\": {\n\"temperature\": " + temp +
   ",\n\"humidity\": " + hum +
   ",\n\"co2\": " + co2 +
   "\n}\n}";
+  
+  return jsonData;
+}
+
+String createHandshakeJSON(String deviceType, String deviceVersion) {
+  String jsonData = "{\n\"device_id\": \"" + DEVICE_ID + "\"" +
+  ",\n\"device_type\": \"" + deviceType + "\"" +
+  ",\n\"device_version\": \"" + deviceVersion + "\"" +
+  "\n}";
   
   return jsonData;
 }

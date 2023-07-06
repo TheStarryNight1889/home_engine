@@ -13,10 +13,6 @@ const defineAirModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      location_id: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
       temperature: {
         type: DataTypes.FLOAT,
         allowNull: false,

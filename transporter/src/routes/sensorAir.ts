@@ -13,7 +13,6 @@ router.post('/sensor/air', async (req, res) => {
         let body = {
           time: new Date(data.timestamp * 1000).toUTCString(),
           device_id: data.device_id,
-          location_id: data.location_id,
           temperature: data.data.temperature,
           humidity: data.data.humidity,
           co2: data.data.co2,

@@ -2,7 +2,7 @@
   <div class="h-screen w-screen flex flex-col justify-center items-center gap-8">
     <div class="">
       <h1 class="text-4xl leading-loose">{{ dayjs(new Date(latest.time)).format('HH mm ss') }}</h1>
-      <h1 class="text-3xl leading-relaxed">{{ airStore.latest.device_id }} ({{ latest.location_id }})</h1>
+      <h1 class="text-3xl leading-relaxed">{{ airStore.latest.device_id }}</h1>
       <div class="flex flex-row text-xl leading-relaxed gap-4">
         <p>Temp.</p>
         <h1 class="">{{ latest.temperature }}</h1>
