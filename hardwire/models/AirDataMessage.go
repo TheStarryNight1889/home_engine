@@ -15,7 +15,6 @@ type AirData struct {
 sample json:
 {
 	"device_id": "1234567890",
-	"location_id": "1234567890",
 	"timestamp": "2019-01-01T00:00:00Z",
 	"data": {
 		"temperature": 25.0,
