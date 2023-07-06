@@ -7,7 +7,6 @@
 
 <script setup>
 import { onMounted, computed } from 'vue'
-import dayjs from 'dayjs'
 import { useAirsStore } from '@/stores/airs'
 import { storeToRefs } from 'pinia';
 import LiveSummary from '@/components/LiveSummary.vue'
@@ -15,13 +14,13 @@ import TimeseriesChart from '@/components/TimeseriesChart.vue'
 
 const airStore = useAirsStore();
 const selectedDevice = 'airsensor1'
-const { list, latest } = storeToRefs(airStore);
+const { all, latest } = storeToRefs(airStore);
 onMounted(async () => {
-  await airStore.setList(selectedDevice);
+  await airStore.setAll(selectedDevice);
 });
 
 const series = computed(() => {
-  const data = list.value.map((item) => {
+  const data = all.value.map((item) => {
     return {
       x: new Date(item.time_bucket).toUTCString(),
       y: item.co2,

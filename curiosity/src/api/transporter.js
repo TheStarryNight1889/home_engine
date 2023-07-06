@@ -11,3 +11,15 @@ export const getSensorAir = async (deviceId) => {
         return []
     }
 }
+
+export const getDevices = async () => {
+    try{
+        const response = await axios.get('http://localhost:3000/device');
+        console.log('fetched devices data');
+        console.log(response.data);
+        return response.data;
+    } catch (error) {
+        console.log('failed to fetch devices data');
+        return []
+    }
+}

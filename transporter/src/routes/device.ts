@@ -44,4 +44,14 @@ router.post('/device/lwt', async (req, res) => {
     }
 })
 
+router.get('/device', async (req, res) => {
+    try {
+        const devices = await Device.findAll();
+        res.send(devices);
+    } catch (err) {
+        console.error(err);
+        res.sendStatus(500);
+    }
+});
+
 export { router as deviceRouter };
