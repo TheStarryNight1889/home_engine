@@ -5,11 +5,11 @@
                 deviceConnection?.status ? 'Connected' : 'Disconnected' }}</h1>
         <div class=" flex flex-row justify-between text-xl leading-relaxed gap-4">
             <p>Device Type:</p>
-            <h1 class="text-secondary-content">{{ device?.device_type }}</h1>
+            <h1 class="text-primary-content">{{ device?.device_type }}</h1>
         </div>
         <div class="flex flex-row justify-between text-xl leading-relaxed gap-4">
             <p>Device Version:</p>
-            <h1 class="text-secondary-content">{{ device?.device_version }}</h1>
+            <h1 class="text-primary-content">{{ device?.device_version }}</h1>
         </div>
     </div>
 </template>

@@ -2,6 +2,7 @@
   <div class="h-screen w-screen flex flex-col gap-8 px-4 py-8">
     <div class="flex gap-2 bg-base-300 p-4 rounded w-full">
       <device-card v-for="device in allDevice" :device="device"
+        :class="{ 'bg-primary-focus text-primary-content': device.device_id === selectedDevice }"
         @click="setSelectedDevice(device.device_id)"></device-card>
     </div>
     <div class="flex flex-col gap-8 w-1/2 h-full">
