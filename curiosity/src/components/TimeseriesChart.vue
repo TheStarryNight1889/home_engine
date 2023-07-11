@@ -1,6 +1,10 @@
 <template>
-    <div class="bg-base-300 p-2 rounded">
-        <apexchart width="100%" type="line" :options="options" :series="series"></apexchart>
+    <div class="bg-base-300 p-2 rounded ">
+        <apexchart v-if="series[0].data.length > 0" width="100%" type="line" :options="options" :series="series">
+        </apexchart>
+        <div v-else class="flex items-center justify-center h-full">
+            <h1 class="text-2xl"> No Data Found</h1>
+        </div>
     </div>
 </template>
 
