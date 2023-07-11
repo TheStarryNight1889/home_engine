@@ -17,7 +17,7 @@ const char WIFI_PASSWORD[] = "BecauseFiSaid0k";
 
 const char MQTT_BROKER[] = "192.168.0.69";
 const int MQTT_PORT = 1883;
-const char MQTT_AIR_SENSOR_TOPIC[] = "data/sensor/air";
+const char MQTT_AIR_SENSOR_TOPIC[] = "data/" + DEVICE_ID + "/sensor/air";
 const char MQTT_LWT_TOPIC[] = "device/" + DEVICE_ID + "/lwt";
 const char MQTT_LWT_MESSAGE[] = "{\"status\": \"offline\"}";
 const char MQTT_HANDSHAKE_TOPIC[] = "device/" + DEVICE_ID + "/handshake";
@@ -251,7 +251,6 @@ void displayMessage(String message){
 
 String createJSON(String timestamp, String temp, String hum, String co2) {
   String jsonData = "{\n\"timestamp\": " + timestamp + 
-  ",\n\"device_id\": \"" + DEVICE_ID + "\"" +
   ",\n\"data\": {\n\"temperature\": " + temp +
   ",\n\"humidity\": " + hum +
   ",\n\"co2\": " + co2 +
@@ -261,8 +260,7 @@ String createJSON(String timestamp, String temp, String hum, String co2) {
 }
 
 String createHandshakeJSON(String deviceType, String deviceVersion) {
-  String jsonData = "{\n\"device_id\": \"" + DEVICE_ID + "\"" +
-  ",\n\"device_type\": \"" + deviceType + "\"" +
+  String jsonData = "{\"device_type\": \"" + deviceType + "\"" +
   ",\n\"device_version\": \"" + deviceVersion + "\"" +
   "\n}";
   

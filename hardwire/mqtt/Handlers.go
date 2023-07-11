@@ -16,6 +16,9 @@ type Handlers struct {
 
 func (h *Handlers) SensorAirHandler(client mqtt.Client, msg mqtt.Message) {
 	data := models.AirData{}
+	topic := msg.Topic()
+	deviceID := strings.Split(topic, "/")[1]
+	data.DeviceID = deviceID
 	err := json.Unmarshal(msg.Payload(), &data)
 	if err != nil {
 		log.Printf("Error = %s\n", err)
