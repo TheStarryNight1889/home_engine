@@ -3,7 +3,7 @@ import { DeviceConnection } from '../models/deviceConnection';
 
 const router = express.Router();
 
-router.get('/device', async (req, res) => {
+router.get('/device/connection', async (req, res) => {
     try {
         const deviceConnections = await DeviceConnection.findAll();
         res.send(deviceConnections);

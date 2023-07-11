@@ -1,18 +1,19 @@
 <template>
   <div class="h-screen w-screen flex flex-col gap-8 px-4 py-8">
     <div class="flex gap-2 bg-base-300 p-4 rounded w-full">
-      <device-card v-for="device in allDevice" :device="device"></device-card>
+      <device-card v-for="device in allDevice" :device="device"
+        @click="setSelectedDevice(device.device_id)"></device-card>
     </div>
     <div class="flex flex-row gap-4">
       <live-summary class="w-1/4" :item="latestAir"></live-summary>
-      <device-info class="w-1/4" :device="allDevice[0]" :deviceConnection="{ status: true }"></device-info>
+      <device-info class="w-1/4" :device="getDevice" :deviceConnection="getConnectionInfo"></device-info>
     </div>
     <timeseries-chart :series="series"></timeseries-chart>
   </div>
 </template>
 
 <script setup>
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, ref } from 'vue'
 import { useAirsStore } from '@/stores/airs'
 import { useDevicesStore } from '@/stores/devices'
 import { storeToRefs } from 'pinia';
@@ -24,14 +25,23 @@ import DeviceInfo from '@/components/DeviceInfo.vue'
 const airStore = useAirsStore();
 const deviceStore = useDevicesStore();
 
-const selectedDevice = 'airsensor1'
+let selectedDevice = ref('Super Air')
 
 const { all: allAir, latest: latestAir } = storeToRefs(airStore);
 const { all: allDevice } = storeToRefs(deviceStore);
+
 onMounted(async () => {
-  await airStore.setAll(selectedDevice);
+  await airStore.setAll(selectedDevice.value);
   await deviceStore.setAll();
+  await deviceStore.setConnectionInfo()
 });
+
+const setSelectedDevice = (deviceId) => {
+  selectedDevice.value = deviceId
+}
+
+const getDevice = computed(() => deviceStore.getDeviceById(selectedDevice.value))
+const getConnectionInfo = computed(() => deviceStore.getConnectionInfoByDeviceId(selectedDevice.value))
 
 const series = computed(() => {
   const data = allAir.value.map((item) => {
