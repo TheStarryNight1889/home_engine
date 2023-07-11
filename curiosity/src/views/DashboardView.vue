@@ -4,11 +4,13 @@
       <device-card v-for="device in allDevice" :device="device"
         @click="setSelectedDevice(device.device_id)"></device-card>
     </div>
-    <div class="flex flex-row gap-4">
-      <live-summary class="w-1/4" :item="latestAir"></live-summary>
-      <device-info class="w-1/4" :device="getDevice" :deviceConnection="getConnectionInfo"></device-info>
+    <div class="flex flex-col gap-8 w-1/2 h-full">
+      <div class="flex flex-row gap-4">
+        <live-summary class="w-1/2" :item="latestAir"></live-summary>
+        <device-info class="w-1/2" :device="getDevice" :deviceConnection="getConnectionInfo"></device-info>
+      </div>
+      <timeseries-chart class="h-full" :series="series"></timeseries-chart>
     </div>
-    <timeseries-chart :series="series"></timeseries-chart>
   </div>
 </template>
 
