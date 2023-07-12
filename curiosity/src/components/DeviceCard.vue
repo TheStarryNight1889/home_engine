@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-primary hover:text-primary-content p-4 rounded">
+    <div class="bg-primary text-primary-content p-4 rounded">
         <h1 class="text-xl">{{ device.device_id }}</h1>
         <p class="text-sm">{{ device.device_type }}</p>
     </div>

@@ -1,15 +1,16 @@
 <template>
-    <div class="bg-base-300 p-4 rounded">
-        <h1 class="text-4xl leading-loose"
-            :class="{ 'text-success': deviceConnection?.status, 'text-error': !deviceConnection?.status }">{{
+    <div class="bg-base-300 p-4 rounded flex flex-col gap-2">
+        <h1 class="text-4xl px-2 py-0 my-2 rounded leading-relaxed text-center"
+            :class="{ 'text-success-content bg-success': deviceConnection?.status, 'text-error-content bg-error': !deviceConnection?.status }">
+            {{
                 deviceConnection?.status ? 'Connected' : 'Disconnected' }}</h1>
-        <div class=" flex flex-row justify-between text-xl leading-relaxed gap-4">
+        <div class=" flex flex-row justify-between text-xl leading-relaxed">
             <p>Device Type:</p>
-            <h1 class="text-primary-content">{{ device?.device_type }}</h1>
+            <h1 class="text-info-content bg-info px-2 py-0 rounded">{{ device?.device_type }}</h1>
         </div>
-        <div class="flex flex-row justify-between text-xl leading-relaxed gap-4">
+        <div class="flex flex-row justify-between text-xl leading-relaxed">
             <p>Device Version:</p>
-            <h1 class="text-primary-content">{{ device?.device_version }}</h1>
+            <h1 class="text-info-content bg-info px-2 py-0 rounded">{{ device?.device_version }}</h1>
         </div>
     </div>
 </template>
