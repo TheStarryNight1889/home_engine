@@ -6,8 +6,8 @@ export const useAirsStore = defineStore('airs', () => {
   const all = ref([])
   const latest = ref({})
 
-  const setAll = async (deviceId) => {
-    all.value = await getSensorAir(deviceId)
+  const setAll = async (deviceId, startTime) => {
+    all.value = await getSensorAir(deviceId, startTime)
     console.log(all.value)
   }
   const setLatest = (data) => {

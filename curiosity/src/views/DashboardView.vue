@@ -10,7 +10,7 @@
         <live-summary class="w-1/2" :item="latestAir"></live-summary>
         <device-info class="w-1/2" :device="getDevice" :deviceConnection="getConnectionInfo"></device-info>
       </div>
-      <timeseries-chart class="h-full" :series="series"></timeseries-chart>
+      <timeseries-chart @graphStartTime="setGraphStartTime" class="h-full" :series="series"></timeseries-chart>
     </div>
   </div>
 </template>
@@ -28,19 +28,23 @@ import DeviceInfo from '@/components/DeviceInfo.vue'
 const airStore = useAirsStore();
 const deviceStore = useDevicesStore();
 
-let selectedDevice = ref('Super Air')
+let selectedDevice = ref('Super Air');
 
 const { all: allAir, latest: latestAir } = storeToRefs(airStore);
 const { all: allDevice } = storeToRefs(deviceStore);
 
 onMounted(async () => {
-  await airStore.setAll(selectedDevice.value);
   await deviceStore.setAll();
   await deviceStore.setConnectionInfo()
 });
 
 const setSelectedDevice = (deviceId) => {
   selectedDevice.value = deviceId
+}
+
+const setGraphStartTime = async (startTime) => {
+  console.log(startTime)
+  await airStore.setAll(selectedDevice.value, startTime);
 }
 
 const getDevice = computed(() => deviceStore.getDeviceById(selectedDevice.value))
