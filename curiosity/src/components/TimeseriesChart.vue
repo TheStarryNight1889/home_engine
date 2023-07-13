@@ -3,6 +3,7 @@
         <div class="flex flex-row gap-2 w-full justify-end">
             <button @click="emitPeriod('7d')" class="btn btn-primary">7d</button>
             <button @click="emitPeriod('1d')" class="btn btn-primary">1d</button>
+            <button @click="emitPeriod('12h')" class="btn btn-primary">12h</button>
             <button @click="emitPeriod('60m')" class="btn btn-primary">60m</button>
             <button @click="emitPeriod('5m')" class="btn btn-primary">5m</button>
         </div>
@@ -33,6 +34,9 @@ function emitPeriod(period) {
             break;
         case '1d':
             emit('graphStartTime', new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString());
+            break;
+        case '12h':
+            emit('graphStartTime', new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString());
             break;
         case '60m':
             emit('graphStartTime', new Date(Date.now() - 60 * 60 * 1000).toISOString());

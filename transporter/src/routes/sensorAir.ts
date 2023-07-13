@@ -32,7 +32,8 @@ router.get('/sensor/air', async (req, res) => {
             return;
         }
         const deviceId: string = req.query.deviceId as string;
-        const data = await Air.findAll(fiveMinuteAggregationByDevice(deviceId));
+        const startTime: string = req.query.startTime as string;
+        const data = await Air.findAll(fiveMinuteAggregationByDevice(deviceId, startTime));
         res.send(data);
     } catch (err) {
         console.error(err);
@@ -40,7 +41,7 @@ router.get('/sensor/air', async (req, res) => {
     }
 });
 
-const fiveMinuteAggregationByDevice: (deviceId: string) => FindOptions<any> = (deviceId: string) => ({
+const fiveMinuteAggregationByDevice: (deviceId: string, startTime: string ) => FindOptions<any> = (deviceId: string, startTime: string) => ({
   attributes: [
     [
       Sequelize.literal("time_bucket('5 minutes', time)"),
@@ -62,7 +63,7 @@ const fiveMinuteAggregationByDevice: (deviceId: string) => FindOptions<any> = (d
   where: {
     device_id: deviceId,
     time: {
-      [Op.gte]: Sequelize.literal("NOW() - INTERVAL '7 days'"),
+      [Op.gte]: Sequelize.literal("TIMESTAMP '" + startTime + "'"),
     },
   },
   group: ['time_bucket'],
