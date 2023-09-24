@@ -1,37 +1,76 @@
-import axios from 'axios';
+import { auth0 } from '../auth';
 
 export const getSensorAir = async (deviceId, startTime) => {
-    try{
-        const response = await axios.get(`http://localhost:3000/sensor/air?deviceId=${deviceId}&startTime=${startTime}`);
-        console.log('fetched sensor air data');
-        console.log(response.data);
-        return response.data;
+    const token = await auth0.getAccessTokenSilently();
+    try {
+        const response = await fetch(`http://localhost:3000/sensor/air?deviceId=${deviceId}&startTime=${startTime}`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
+        });
+
+        if (!response.ok) {
+            console.log('Failed to fetch sensor air data');
+            return [];
+        }
+
+        const data = await response.json();
+        console.log('Fetched sensor air data');
+        console.log(data);
+        return data;
     } catch (error) {
-        console.log('failed to fetch sensor air data');
-        return []
+        console.error('An error occurred while fetching sensor air data:', error);
+        return [];
     }
-}
+};
 
 export const getDevices = async () => {
-    try{
-        const response = await axios.get('http://localhost:3000/device');
-        console.log('fetched devices data');
-        console.log(response.data);
-        return response.data;
+    const token = await auth0.getAccessTokenSilently()
+    try {
+        const response = await fetch('http://localhost:3000/device', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            console.log('Failed to fetch devices data');
+            return [];
+        }
+
+        const data = await response.json();
+        console.log('Fetched devices data');
+        console.log(data);
+        return data;
     } catch (error) {
-        console.log('failed to fetch devices data');
-        return []
+        console.error('An error occurred while fetching devices data:', error);
+        return [];
     }
-}
+};
 
 export const getDeviceConnections = async () => {
-    try{
-        const response = await axios.get('http://localhost:3000/device/connection');
-        console.log('fetched device connections data');
-        console.log(response.data);
-        return response.data;
+    const token = await auth0.getAccessTokenSilently()
+    try {
+        const response = await fetch('http://localhost:3000/device/connection', {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if (!response.ok) {
+            console.log('Failed to fetch device connections data');
+            return [];
+        }
+
+        const data = await response.json();
+        console.log('Fetched device connections data');
+        console.log(data);
+        return data;
     } catch (error) {
-        console.log('failed to fetch device connections data');
-        return []
+        console.error('An error occurred while fetching device connections data:', error);
+        return [];
     }
-}
+};

@@ -8,13 +8,19 @@ import { useWs } from './ws/useWs'
 
 import App from './App.vue'
 import router from './router'
+import { auth0 } from './auth';
+
 
 const app = createApp(App)
+document.cookie = "cross-site-cookie=bar; SameSite=None; Secure"
+app.use(router)
+
+app.use(auth0);
+  
 
 app.use(createPinia())
 
 useWs('ws://localhost:8000/ws')
-app.use(router)
 
 app.use(VueApexCharts);
 
