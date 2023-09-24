@@ -14,7 +14,7 @@ services:
     container_name: hardwire
     depends_on:
       - mosquitto
-      - transporter
+      - bengine
     image: hardwire
     networks:
       - home_engine
@@ -26,16 +26,16 @@ services:
       - MQTT_SENSOR_AIR=data/+/sensor/air
       - MQTT_DEVICE_HANDSHAKE=device/+/handshake
       - MQTT_DEVICE_LWT=device/+/lwt
-      - TRANSPORTER_HOST=transporter
-      - TRANSPORTER_PORT=3000
-  transporter:
-    container_name: transporter
+      - bengine_HOST=bengine
+      - bengine_PORT=3000
+  bengine:
+    container_name: bengine
     depends_on:
       - timescaledb
     networks:
       - home_engine
-    image: transporter
-    build: ./transporter
+    image: bengine
+    build: ./bengine
     environment:
       - DB_HOST=timescaledb
       - DB_USER=root

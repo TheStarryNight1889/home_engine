@@ -4,6 +4,9 @@
 		<p class="text-xl text-cyan-400 drop-shadow-xs">
 			Monitor your air quality with state of the art IoT devices.
 		</p>
+		<a href="https://app.saer.io/login">
+			<button>Login</button>
+		</a>
 	</div>
 	<div
 		class="text-center flex flex-col space-y-12 justify-center items-center h-2/3 mx-auto my-auto"
