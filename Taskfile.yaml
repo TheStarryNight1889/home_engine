@@ -12,4 +12,4 @@ tasks:
       -  docker compose logs -f
   seed:
     cmds:
-      -  docker run -it --rm --network=host -e PGPASSWORD=root postgres psql -h localhost -U your_username -d your_database -a -f /path/to/your/file.sql
+      -  docker run -it --rm --network=host -e PGPASSWORD=root postgres psql -h localhost -U root -d home_engine -a -f ./bengine/seed.sql

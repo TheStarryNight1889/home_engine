@@ -14,7 +14,7 @@
     "test": "bun --watch test",
     "test-bail": "bun test --bail",
     "test-rerun": "bun test --rerun-each 10",
-    "build": "bun build src/index.ts --outdir ./dist"
+    "build": "bun build src/index.ts --outdir ./dist --target=bun"
   },
   "dependencies": {
     "@types/cors": "^2.8.14",
