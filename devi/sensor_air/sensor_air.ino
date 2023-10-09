@@ -19,7 +19,7 @@ const char MQTT_BROKER[] = "192.168.0.69";
 const int MQTT_PORT = 1883;
 const char MQTT_AIR_SENSOR_TOPIC[] = "data/" + DEVICE_ID + "/sensor/air";
 const char MQTT_LWT_TOPIC[] = "device/" + DEVICE_ID + "/lwt";
-const char MQTT_LWT_MESSAGE[] = "{\"status\": \"offline\"}";
+const char MQTT_LWT_MESSAGE[] = "{\"status\": \"false\"}";
 const char MQTT_HANDSHAKE_TOPIC[] = "device/" + DEVICE_ID + "/handshake";
 // Devices
 U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);

@@ -1,38 +1,42 @@
-import { DataTypes, Model, Sequelize } from 'sequelize'
+import {Pool, PoolClient} from 'pg'
 
-class Air extends Model {}
-
-const defineAirModel = (sequelize: Sequelize) => {
-    Air.init(
-        {
-            time: {
-                type: DataTypes.DATE,
-                allowNull: false,
-            },
-            device_id: {
-                type: DataTypes.STRING,
-                allowNull: false,
-            },
-            temperature: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
-            },
-            humidity: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
-            },
-            co2: {
-                type: DataTypes.FLOAT,
-                allowNull: false,
-            },
-        },
-        {
-            sequelize,
-            modelName: 'Air',
-            tableName: 'air',
-            timestamps: false,
-        }
-    )
+type Air = {
+    time: Date
+    device_id: string
+    temperature: number
+    humidity: number
+    co2: number
 }
 
-export { Air, defineAirModel }
+class AirModel {
+    private db: Pool;
+
+    constructor(db: Pool){
+        this.db = db;
+    }
+    public async getByDeviceId(device_id: string): Promise<Air[]> {
+        const client = await this.getClient();
+        const res = await client.query(`SELECT * FROM air WHERE device_id = ${device_id}`);
+        client.release();
+        return res.rows;
+    }
+    public async create(air: Air): Promise<Air> {
+        const client = await this.getClient();
+        const res = await client.query(`INSERT INTO air VALUES (
+            ${air.time},
+            ${air.device_id},
+            ${air.temperature},
+            ${air.humidity},
+            ${air.co2})
+        `);
+        client.release();
+        return res.rows[0];
+    }
+    private async getClient(): Promise<PoolClient> {
+        const client = await this.db.connect();
+        return client;
+    }
+
+}
+
+export { Air, AirModel }

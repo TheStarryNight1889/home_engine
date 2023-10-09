@@ -1,6 +1,8 @@
+import { Server } from "bun"
+
 class Wss {
     private static instance: Wss
-    private wss: any
+    private wss: Server
     private port: number
 
     private constructor() {
@@ -10,9 +12,9 @@ class Wss {
             fetch(req, server) {
                 // upgrade the request to a WebSocket
                 const url = new URL(req.url)
-                if (url.pathname === '/chat') {
+                if (url.pathname === '/ws') {
                     if (server.upgrade(req)) {
-                        return new Response(null, { status: 101 });
+                        return new Response("Welcome", { status: 101 });
                         
                     }
                     return new Response('Upgrade failed :(', { status: 500 })
@@ -21,6 +23,8 @@ class Wss {
             websocket: {
                 open(ws) {
                     console.log('Client connected')
+                    ws.subscribe('live-data');
+                    ws.send('Welcome!')
                 },
                 message(ws, message) {
                     console.log('Message received:', message)
@@ -32,13 +36,14 @@ class Wss {
         })
     }
     public send(data: any) {
-        this.wss.send(JSON.stringify(data))
+        this.wss.publish('live-data', JSON.stringify(data))
     }
 
     public static getInstance(): Wss {
         if (!Wss.instance) {
             console.log('Creating new WSS instance')
             Wss.instance = new Wss()
+            console.log('WSS instance created')
         }
         return Wss.instance
     }

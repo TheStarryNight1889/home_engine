@@ -1,8 +1,11 @@
-import { Sequelize } from 'sequelize'
-import { Models } from '../models/'
+import { Pool } from 'pg'
+import { AirModel } from '../models/air'
+import { DeviceModel } from '../models/device'
 
 class DB {
-    private sequelize: Sequelize
+    private dbPool: Pool
+    private airModel: AirModel
+    private deviceModel: DeviceModel
 
     private DB_NAME: string = Bun.env.DB_NAME || 'bengine'
     private DB_USER: string = Bun.env.DB_USER || 'bengine'
@@ -11,31 +14,24 @@ class DB {
     private DB_PORT: number = Number(Bun.env.DB_PORT) || 5432
 
     constructor() {
-        this.sequelize = new Sequelize(
-            this.DB_NAME,
-            this.DB_USER,
-            this.DB_PASSWORD,
-            {
-                host: this.DB_HOST,
-                port: this.DB_PORT,
-                dialect: 'postgres',
-                logging: false,
-            }
-        )
+        this.dbPool = new Pool({
+            host: this.DB_HOST,
+            port: this.DB_PORT,
+            database: this.DB_NAME,
+            user: this.DB_USER,
+            password: this.DB_PASSWORD,
+            connectionTimeoutMillis: 5000,
+        }); 
+        this.airModel = new AirModel(this.dbPool)
+        this.deviceModel = new DeviceModel(this.dbPool)
     }
 
-    public async start(): Promise<void> {
-        try {
-            await this.connect()
-            console.log('Database connection established')
-        } catch (err) {
-            console.log('Unable to connect to the database:', err)
-        }
+    public getAirModel(): AirModel {
+        return this.airModel
     }
-    private async connect(): Promise<void> {
-        await Models.build(this.sequelize)
-        await this.sequelize.authenticate()
-        await this.sequelize.sync()
+
+    public getDeviceModel(): DeviceModel {
+        return this.deviceModel
     }
 }
 

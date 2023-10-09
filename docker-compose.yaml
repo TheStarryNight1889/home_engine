@@ -10,24 +10,6 @@ services:
       - "80"
     ports:
       - "80:80"
-  hardwire:
-    container_name: hardwire
-    depends_on:
-      - mosquitto
-      - bengine
-    image: hardwire
-    networks:
-      - home_engine
-    build: ./hardwire
-    environment:
-      - MQTT_HOST=mosquitto
-      - MQTT_PORT=1883
-      - MQTT_CLIENT_ID=hardwire
-      - MQTT_SENSOR_AIR=data/+/sensor/air
-      - MQTT_DEVICE_HANDSHAKE=device/+/handshake
-      - MQTT_DEVICE_LWT=device/+/lwt
-      - bengine_HOST=bengine
-      - bengine_PORT=3000
   bengine:
     container_name: bengine
     depends_on:
@@ -68,7 +50,7 @@ services:
     environment:
       - POSTGRES_PASSWORD=root
       - POSTGRES_USER=root
-      - POSTGRES_DB=home_engine
+      - POSTGRES_DB=bengine
     expose:
       - "5432"
     ports:
