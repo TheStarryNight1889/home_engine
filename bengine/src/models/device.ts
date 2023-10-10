@@ -15,19 +15,19 @@ class DeviceModel {
     }
     public async get(): Promise<Device[]> {
         const client = await this.getClient()
-        const res = await client.query('SELECT * FROM device')
+        const res = await client.query('SELECT * FROM devices')
         client.release()
         return res.rows
     }
     public async findOne(id: string): Promise<Device | null> {
         const client = await this.getClient()
-        const res = await client.query(`SELECT * FROM device WHERE ${id}`)
+        const res = await client.query(`SELECT * FROM devices WHERE '${id}'`)
         client.release()
         return res.rows[0]
     }
     public async create(device: Device): Promise<Device> {
         const client = await this.getClient()
-        const res = await client.query(`INSERT INTO device VALUES (
+        const res = await client.query(`INSERT INTO devices VALUES (
             ${device.deviceId},
             ${device.deviceType},
             ${device.deviceVersion},
@@ -39,7 +39,7 @@ class DeviceModel {
     }
     public async update(id: string, device: Device): Promise<Device> {
         const client = await this.getClient()
-        const res = await client.query(`UPDATE device SET
+        const res = await client.query(`UPDATE devices SET
             device_id = ${device.deviceId},
             device_type = ${device.deviceType},
             device_version = ${device.deviceVersion},

@@ -16,13 +16,13 @@ class AirModel {
     }
     public async getByDeviceId(device_id: string): Promise<Air[]> {
         const client = await this.getClient();
-        const res = await client.query(`SELECT * FROM air WHERE device_id = ${device_id}`);
+        const res = await client.query(`SELECT * FROM airs WHERE device_id = '${device_id}'`);
         client.release();
         return res.rows;
     }
     public async create(air: Air): Promise<Air> {
         const client = await this.getClient();
-        const res = await client.query(`INSERT INTO air VALUES (
+        const res = await client.query(`INSERT INTO airs VALUES (
             ${air.time},
             ${air.device_id},
             ${air.temperature},

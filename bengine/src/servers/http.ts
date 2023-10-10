@@ -13,7 +13,7 @@ class Http {
         tokenSigningAlg: 'RS256',
     })
 
-    constructor(controllers: any[]) {
+    constructor(controllers: ControllerInterface[]) {
         this.app = express()
         this.port = Number(Bun.env.APP_PORT)
         this.controllers = controllers

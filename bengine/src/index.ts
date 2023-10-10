@@ -3,7 +3,7 @@ import { DB } from './servers/db'
 import { Wss } from './servers/wss'
 import { Mqtt } from './servers/mqtt'
 
-import { sensorAirRouter } from './controllers/sensorAir'
+import { AirController } from './controllers/air'
 import { DeviceController } from './controllers/device'
 
 import { DeviceService } from './services/device'
@@ -26,8 +26,9 @@ const mqttHandler = new MqttHandler(
 const mqtt = new Mqtt(mqttHandler)
 
 const deviceController = new DeviceController(deviceService)
+const airController = new AirController(airService)
 
-const http = new Http([deviceController])
+const http = new Http([deviceController, airController])
 
 async function bootstrap() {
     mqtt.start()

@@ -17,6 +17,10 @@ export class AirController implements ControllerInterface{
     public async getAirs(req: Request, res: Response): Promise<void> {
         try {
             const deviceId = req.query.deviceId as string
+            if (!deviceId) {
+                res.sendStatus(400)
+                return
+            }
             const airs = await this.airService.getAirs(deviceId)
             res.send(airs)
         } catch (err) {
