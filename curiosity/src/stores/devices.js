@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 import { defineStore } from 'pinia'
-import { getDevices } from '../api/transporter'
+import { getDevices } from '../api/bengine'
 
 export const useDevicesStore = defineStore('devices', () => {
   const all = ref([])

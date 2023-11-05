@@ -32,7 +32,6 @@ const http = new Http([deviceController, airController])
 
 async function bootstrap() {
     mqtt.start()
-    Wss.getInstance()
     http.start()
 }
 

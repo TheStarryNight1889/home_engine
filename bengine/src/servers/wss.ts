@@ -23,7 +23,8 @@ class Wss {
             websocket: {
                 open(ws) {
                     console.log('Client connected')
-                    ws.subscribe('live-data');
+                    ws.subscribe('device');
+                    ws.subscribe('sensor-air')
                 },
                 message(ws, message) {
                     console.log('Message received:', message)
@@ -34,8 +35,8 @@ class Wss {
             },
         })
     }
-    public send(data: any) {
-        this.wss.publish('live-data', JSON.stringify(data))
+    public send(topic: string, data: any) {
+        this.wss.publish(topic, JSON.stringify(data))
     }
 
     public static getInstance(): Wss {

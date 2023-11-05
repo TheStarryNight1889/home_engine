@@ -2,13 +2,16 @@ import { Air } from "../models/air";
 import { Device } from "../models/device";
 import { AirService } from "../services/air";
 import { DeviceService } from "../services/device";
+import { Wss } from "../servers/wss";
 
 class MqttHandler {
     private deviceService: DeviceService;
     private airService: AirService;
+    private wss: Wss;
     constructor(deviceService: DeviceService, airService: AirService) {
         this.deviceService = deviceService;
         this.airService = airService;
+        this.wss = Wss.getInstance();
     }
 
     public async handle(topic: string, message: any) {
@@ -48,8 +51,9 @@ class MqttHandler {
     private async handleDeviceHandshake(deviceId: string, message: any) {
         try {
             const device = await this.deviceService.getDevice(deviceId)
+            let newDevice: Device;
             if (device) {
-                await this.deviceService.updateDevice(deviceId, device)
+                newDevice = await this.deviceService.updateDevice(deviceId, device)
             } else {
                 const d : Device = {
                     deviceId: deviceId,
@@ -59,8 +63,11 @@ class MqttHandler {
                     lastSeen: new Date(),
 
                 }
-                await this.deviceService.createDevice(d)
+                newDevice = await this.deviceService.createDevice(d)
+                this.wss.send('device', newDevice)
             }
+
+
         }
         catch (err) {
             console.log(err)
