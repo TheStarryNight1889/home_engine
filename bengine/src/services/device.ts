@@ -15,11 +15,11 @@ class DeviceService {
         return await this.deviceModel.get()
     }
 
-    public async createDevice(device: any): Promise<Device> {
+    public async createDevice(device: Device): Promise<Device> {
         return await this.deviceModel.create(device)
     }
 
-    public async updateDevice(deviceId: string, device: any): Promise<Device> {
+    public async updateDevice(deviceId: string, device: Device): Promise<Device> {
         return await this.deviceModel.update(deviceId, device)
     }
 }

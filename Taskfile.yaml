@@ -7,9 +7,10 @@ tasks:
   stop: 
     cmds:
       -  docker compose down --remove-orphans
+  db: 
+    cmds:
+      -  docker compose stop timescaledb
+      -  docker compose up -d timescaledb
   logs: 
     cmds:
       -  docker compose logs -f
-  seed:
-    cmds:
-      -  docker run -it --rm --network=host -e PGPASSWORD=root postgres psql -h localhost -U root -d home_engine -a -f ./bengine/seed.sql

@@ -16,6 +16,6 @@ CREATE TABLE IF NOT EXISTS devices (
     device_id varchar(255),
     device_type varchar(255),
     device_version varchar(255),
-    connection_status varchar(255),
+    connection_status boolean,
     last_seen timestamp
 );

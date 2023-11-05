@@ -1,9 +1,9 @@
 <template>
     <div class="bg-base-300 p-4 rounded flex flex-col gap-2">
         <h1 class="text-4xl px-2 py-0 my-2 rounded leading-relaxed text-center"
-            :class="{ 'text-success-content bg-success': deviceConnection?.status, 'text-error-content bg-error': !deviceConnection?.status }">
+            :class="{ 'text-success-content bg-success': device?.connection_status, 'text-error-content bg-error': !device?.connection_status }">
             {{
-                deviceConnection?.status ? 'Connected' : 'Disconnected' }}</h1>
+                device?.connection_status ? 'Connected' : 'Disconnected' }}</h1>
         <div class=" flex flex-row justify-between text-xl leading-relaxed">
             <p>Device Type:</p>
             <h1 class="text-info-content bg-info px-2 py-0 rounded">{{ device?.device_type }}</h1>
@@ -19,10 +19,6 @@
 
 const props = defineProps({
     device: {
-        type: Object,
-        required: true
-    },
-    deviceConnection: {
         type: Object,
         required: true
     }

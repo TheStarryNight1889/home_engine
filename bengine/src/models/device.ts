@@ -27,13 +27,16 @@ class DeviceModel {
     }
     public async create(device: Device): Promise<Device> {
         const client = await this.getClient()
-        const res = await client.query(`INSERT INTO devices VALUES (
-            ${device.deviceId},
-            ${device.deviceType},
-            ${device.deviceVersion},
-            ${device.connectionStatus},
-            ${device.lastSeen})
-        `)
+        const queryText = `INSERT INTO devices (device_id, device_type, device_version, connection_status, last_seen) 
+                           VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+        const values = [
+            device.deviceId,
+            device.deviceType,
+            device.deviceVersion,
+            device.connectionStatus,
+            device.lastSeen
+        ];
+        const res = await client.query(queryText, values);
         client.release()
         return res.rows[0]
     }

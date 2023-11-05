@@ -20,7 +20,7 @@ app.use(auth0);
 
 app.use(createPinia())
 
-useWs('ws://localhost:8000/ws')
+useWs('ws://localhost:3001/ws')
 
 app.use(VueApexCharts);
 

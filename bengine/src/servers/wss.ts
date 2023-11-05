@@ -24,7 +24,6 @@ class Wss {
                 open(ws) {
                     console.log('Client connected')
                     ws.subscribe('live-data');
-                    ws.send('Welcome!')
                 },
                 message(ws, message) {
                     console.log('Message received:', message)

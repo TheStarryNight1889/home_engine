@@ -3,7 +3,7 @@ import { auth0 } from '../auth';
 export const getSensorAir = async (deviceId, startTime) => {
     const token = await auth0.getAccessTokenSilently();
     try {
-        const response = await fetch(`http://localhost:3000/sensor/air?deviceId=${deviceId}&startTime=${startTime}`, {
+        const response = await fetch(`http://localhost:3000/api/airs?deviceId=${deviceId}&startTime=${startTime}`, {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -28,7 +28,7 @@ export const getSensorAir = async (deviceId, startTime) => {
 export const getDevices = async () => {
     const token = await auth0.getAccessTokenSilently()
     try {
-        const response = await fetch('http://localhost:3000/device', {
+        const response = await fetch('http://localhost:3000/api/devices', {
             method: 'GET',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -46,31 +46,6 @@ export const getDevices = async () => {
         return data;
     } catch (error) {
         console.error('An error occurred while fetching devices data:', error);
-        return [];
-    }
-};
-
-export const getDeviceConnections = async () => {
-    const token = await auth0.getAccessTokenSilently()
-    try {
-        const response = await fetch('http://localhost:3000/device/connection', {
-            method: 'GET',
-            headers: {
-                'Authorization': `Bearer ${token}`
-            }
-        });
-
-        if (!response.ok) {
-            console.log('Failed to fetch device connections data');
-            return [];
-        }
-
-        const data = await response.json();
-        console.log('Fetched device connections data');
-        console.log(data);
-        return data;
-    } catch (error) {
-        console.error('An error occurred while fetching device connections data:', error);
         return [];
     }
 };

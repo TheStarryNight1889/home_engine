@@ -11,7 +11,7 @@ export class AirController implements ControllerInterface{
     }
 
     public routes(app: express.Application): void {
-        app.get('/airs', this.getAirs.bind(this));
+        app.use('/api/airs', this.getAirs.bind(this));
     }
 
     public async getAirs(req: Request, res: Response): Promise<void> {

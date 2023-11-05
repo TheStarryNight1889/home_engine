@@ -8,7 +8,7 @@
     <div class="flex flex-col gap-8 w-1/2 h-full">
       <div class="flex flex-row gap-4">
         <live-summary class="w-1/2" :item="latestAir"></live-summary>
-        <device-info class="w-1/2" :device="getDevice" :deviceConnection="getConnectionInfo"></device-info>
+        <device-info class="w-1/2" :device="getDevice"></device-info>
       </div>
       <timeseries-chart @graphStartTime="setGraphStartTime" class="h-full" :series="series"></timeseries-chart>
     </div>
@@ -35,7 +35,6 @@ const { all: allDevice } = storeToRefs(deviceStore);
 
 onMounted(async () => {
   await deviceStore.setAll();
-  await deviceStore.setConnectionInfo()
 });
 
 const setSelectedDevice = (deviceId) => {
@@ -48,7 +47,6 @@ const setGraphStartTime = async (startTime) => {
 }
 
 const getDevice = computed(() => deviceStore.getDeviceById(selectedDevice.value))
-const getConnectionInfo = computed(() => deviceStore.getConnectionInfoByDeviceId(selectedDevice.value))
 
 const series = computed(() => {
   const data = allAir.value.map((item) => {

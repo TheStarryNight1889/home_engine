@@ -4,7 +4,7 @@ services:
     image: curiosity
     container_name: curiosity
     networks:
-      - home_engine
+      - bengine
     build: ./curiosity
     expose:
       - "80"
@@ -15,14 +15,14 @@ services:
     depends_on:
       - timescaledb
     networks:
-      - home_engine
+      - bengine
     image: bengine
     build: ./bengine
     environment:
       - DB_HOST=timescaledb
       - DB_USER=root
       - DB_PASSWORD=root
-      - DB_NAME=home_engine
+      - DB_NAME=bengine
       - DB_PORT=5432
       - APP_PORT=3000
     expose:
@@ -30,12 +30,12 @@ services:
       - "8000"
     ports:
       - "3000:3000"
-      - "8000:8000"
+      - "3001:3001"
   mosquitto:
     image: eclipse-mosquitto:latest
     container_name: mosquitto
     networks:
-      - home_engine 
+      - bengine 
     expose:
       - 1883
     ports:
@@ -44,7 +44,7 @@ services:
       - "./mosquitto.conf:/mosquitto/config/mosquitto.conf"
   timescaledb:
     networks:
-      - home_engine
+      - bengine
     container_name: timescaledb
     image: timescale/timescaledb:latest-pg14
     environment:
@@ -58,8 +58,8 @@ services:
     volumes:
       - timescaledb_data:/var/lib/postgresql/data
       - ./db-init:/docker-entrypoint-initdb.d/
-  
+
 volumes:
   timescaledb_data:
 networks:
-  home_engine:
+  bengine:

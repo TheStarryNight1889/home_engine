@@ -17,8 +17,6 @@ export function useWs(url) {
 
       if (message.type === 'air') {
         airStore.setLatest(message.data)
-      } else if(message.type === 'deviceConnection'){
-        deviceStore.updateConnectionInfo(message.data)
       } else{
         console.log(`[useWs] message type not found: ${message.type}`)
       }
