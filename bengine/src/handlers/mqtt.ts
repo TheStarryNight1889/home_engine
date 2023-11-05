@@ -76,7 +76,8 @@ class MqttHandler {
 
     private async handleDeviceLwt(deviceId: string, message: any) {
         try {
-            await this.deviceService.updateDevice(deviceId, message)
+            let newDevice = await this.deviceService.updateDevice(deviceId, message)
+            this.wss.send('device', newDevice)
         }
         catch (err) {
             console.log(err)
