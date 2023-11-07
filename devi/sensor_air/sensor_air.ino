@@ -1,4 +1,4 @@
-#include <ArduinoMqttClient.h>
+#include <MQTT.h>
 #include <WiFiNINA.h>
 #include <Wire.h>
 #include <RTCZero.h>
@@ -8,7 +8,7 @@
 #include <SPI.h>
 
 // TODO: move the values to a config file 
-const String DEVICE_ID = "airsensor1";
+const char DEVICE_ID[] = "airsensor1";
 const String DEVICE_TYPE = "air_sensor";
 const String DEVICE_VERSION = "0.0.0";
 
@@ -17,10 +17,10 @@ const char WIFI_PASSWORD[] = "BecauseFiSaid0k";
 
 const char MQTT_BROKER[] = "192.168.0.69";
 const int MQTT_PORT = 1883;
-const char MQTT_AIR_SENSOR_TOPIC[] = "data/" + DEVICE_ID + "/sensor/air";
-const char MQTT_LWT_TOPIC[] = "device/" + DEVICE_ID + "/lwt";
+const char MQTT_AIR_SENSOR_TOPIC[] = "data/airsensor1/sensor/air";
+const char MQTT_LWT_TOPIC[] = "device/airsensor1/lwt";
 const char MQTT_LWT_MESSAGE[] = "{\"status\": \"false\"}";
-const char MQTT_HANDSHAKE_TOPIC[] = "device/" + DEVICE_ID + "/handshake";
+const char MQTT_HANDSHAKE_TOPIC[] = "device/airsensor1/handshake";
 // Devices
 U8G2_SSD1306_128X64_ALT0_F_HW_I2C u8g2(U8G2_R0, U8X8_PIN_NONE);
 SCD30 airSensor;
@@ -28,7 +28,7 @@ SCD30 airSensor;
 // Connections
 RTCZero rtc;
 WiFiClient wifiClient;
-MqttClient mqttClient(wifiClient);
+MQTTClient mqttClient;
 
 // Function declarations
 void setInternalClock(RTCZero &rtc);
@@ -115,7 +115,7 @@ void loop()
 
         Serial.println("Connected -- Printing & Publishing");
         displayAirReads(co2Str, tempStr, humStr);
-        mqttClient.poll();
+        mqttClient.loop();
         String jsonData = createJSON(timestamp, temp, hum, co2);
         publishMessage(MQTT_AIR_SENSOR_TOPIC, jsonData);
       } else{
@@ -207,10 +207,11 @@ void connectToMqtt()
   Serial.println(MQTT_PORT);
 
   int attempts = 0;
-  mqttClient.setWill(MQTT_LWT_TOPIC, MQTT_LWT_MESSAGE);
-  mqttClient.connect(MQTT_BROKER, MQTT_PORT);
+  mqttClient.begin(MQTT_BROKER, MQTT_PORT, wifiClient);
+  mqttClient.setWill(MQTT_LWT_TOPIC, MQTT_LWT_MESSAGE, false, 1);
   while (attempts < 3 && !mqttClient.connected())
   {
+    mqttClient.connect(DEVICE_ID, false);
     delay(500);
     attempts++;
   }
@@ -218,7 +219,7 @@ void connectToMqtt()
   if (mqttClient.connected())
   {
     Serial.println("MQTT connected");
-    mqttClient.publish(MQTT_HANDSHAKE_TOPIC, createHandshakeJSON(DEVICE_TYPE, DEVICE_VERSION)
+    publishMessage(MQTT_HANDSHAKE_TOPIC, createHandshakeJSON(DEVICE_TYPE, DEVICE_VERSION));
   }
   else
   {
@@ -227,9 +228,7 @@ void connectToMqtt()
 }
 void publishMessage(String topic, String message)
 {
-  mqttClient.beginMessage(topic);
-  mqttClient.println(message);
-  mqttClient.endMessage();
+  mqttClient.publish(topic, message);
 }
 
 void displayAirReads(String co2Str, String tempStr, String humStr)

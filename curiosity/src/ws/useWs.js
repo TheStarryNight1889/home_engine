@@ -12,6 +12,7 @@ export function useWs(url) {
   watchEffect(() => {
     socket.value = new WebSocket(url)
 
+    //////// definetly need to refactor this ////////
     socket.value.onmessage = (event) => {
       const message = JSON.parse(event.data)
 

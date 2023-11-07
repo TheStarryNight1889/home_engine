@@ -34,6 +34,7 @@ class MqttHandler {
 
     private async handleSensorAir(deviceId: string, message: any) {
         try {
+            console.log('pinggg')
             const air: Air = {
                 device_id: deviceId,
                 // message.timestamp is epoch time in seconds

@@ -22,7 +22,9 @@ class Mqtt {
     public start() {
         console.log('MQTT client started on port', this.port)
         this.client.subscribe(this.topics)
+        console.log(this.topics)
         this.client.on('message', async (topic, message) => {
+            console.log('ping')
             await this.handler.handle(topic, JSON.parse(message.toString()))
         })
     }
