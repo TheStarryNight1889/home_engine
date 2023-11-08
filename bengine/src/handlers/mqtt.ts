@@ -15,26 +15,23 @@ class MqttHandler {
     }
 
     public async handle(topic: string, message: any) {
-        console.log('Handling new MQTT message: ', topic, message)
-
         const deviceId = topic.split('/')[1]
 
-        if (topic === Bun.env.MQTT_SENSOR_AIR) {
-            await this.handleSensorAir(message, deviceId)
+        if (topic.includes("sensor/air")) {
+            await this.handleSensorAir(deviceId, message)
         }
 
-        if (topic === Bun.env.MQTT_DEVICE_HANDSHAKE) {
+        if (topic.includes("handshake")) {
             await this.handleDeviceHandshake(message, deviceId)
         }
 
-        if (topic === Bun.env.MQTT_DEVICE_LWT) {
+        if (topic.includes("lwt")) {
             await this.handleDeviceLwt(message, deviceId)
         }
     }
 
     private async handleSensorAir(deviceId: string, message: any) {
         try {
-            console.log('pinggg')
             const air: Air = {
                 device_id: deviceId,
                 // message.timestamp is epoch time in seconds
@@ -64,6 +61,7 @@ class MqttHandler {
                     lastSeen: new Date(),
 
                 }
+                console.log('creating new device')
                 newDevice = await this.deviceService.createDevice(d)
                 this.wss.send('device', newDevice)
             }

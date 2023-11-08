@@ -22,13 +22,16 @@ class AirModel {
     }
     public async create(air: Air): Promise<Air> {
         const client = await this.getClient();
-        const res = await client.query(`INSERT INTO airs VALUES (
-            ${air.time},
-            ${air.device_id},
-            ${air.temperature},
-            ${air.humidity},
-            ${air.co2})
-        `);
+        const queryText = `INSERT INTO airs (time, device_id, temperature, humidity, co2) 
+                           VALUES ($1, $2, $3, $4, $5) RETURNING *`;
+        const values = [
+            air.time,
+            air.device_id,
+            air.temperature,
+            air.humidity,
+            air.co2,
+        ];
+        const res = await client.query(queryText, values);
         client.release();
         return res.rows[0];
     }
