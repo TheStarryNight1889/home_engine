@@ -22,7 +22,7 @@ class MqttHandler {
         }
 
         if (topic.includes("handshake")) {
-            await this.handleDeviceHandshake(message, deviceId)
+            await this.handleDeviceHandshake(deviceId, message)
         }
 
         if (topic.includes("lwt")) {
@@ -51,7 +51,14 @@ class MqttHandler {
             const device = await this.deviceService.getDevice(deviceId)
             let newDevice: Device;
             if (device) {
-                newDevice = await this.deviceService.updateDevice(deviceId, device)
+                let d: Device = {
+                    deviceId: deviceId,
+                    deviceType: message.device_type,
+                    deviceVersion: message.device_version,
+                    connectionStatus: true,
+                    lastSeen: new Date(),  
+                }
+                newDevice = await this.deviceService.updateDevice(deviceId, d)
             } else {
                 const d : Device = {
                     deviceId: deviceId,
@@ -61,7 +68,6 @@ class MqttHandler {
                     lastSeen: new Date(),
 
                 }
-                console.log('creating new device')
                 newDevice = await this.deviceService.createDevice(d)
                 this.wss.send('device', newDevice)
             }

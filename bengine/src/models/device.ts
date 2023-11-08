@@ -21,7 +21,7 @@ class DeviceModel {
     }
     public async findOne(id: string): Promise<Device | null> {
         const client = await this.getClient()
-        const res = await client.query(`SELECT * FROM devices WHERE '${id}'`)
+        const res = await client.query(`SELECT * FROM devices WHERE device_id = '${id}'`)
         client.release()
         return res.rows[0]
     }
@@ -42,14 +42,15 @@ class DeviceModel {
     }
     public async update(id: string, device: Device): Promise<Device> {
         const client = await this.getClient()
-        const res = await client.query(`UPDATE devices SET
-            device_id = ${device.deviceId},
-            device_type = ${device.deviceType},
-            device_version = ${device.deviceVersion},
-            connection_status = ${device.connectionStatus},
-            last_seen = ${device.lastSeen}
-            WHERE device_id = ${id}
-        `)
+        const queryText = `UPDATE devices SET device_type = $1, device_version = $2, connection_status = $3, last_seen = $4 WHERE device_id = $5 RETURNING *`
+        const values = [
+            device.deviceType,
+            device.deviceVersion,
+            device.connectionStatus,
+            device.lastSeen,
+            id
+        ]
+        const res = await client.query(queryText, values)
         client.release()
         return res.rows[0]
     }
