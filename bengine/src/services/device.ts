@@ -7,7 +7,7 @@ class DeviceService {
         this.deviceModel = deviceModel
     }
 
-    public async getDevice(deviceId: string): Promise<Device | null> {
+    public async getDevice(deviceId: string): Promise<any | null> {
         return await this.deviceModel.findOne(deviceId)
     }
 

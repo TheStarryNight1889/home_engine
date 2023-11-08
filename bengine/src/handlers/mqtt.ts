@@ -26,7 +26,7 @@ class MqttHandler {
         }
 
         if (topic.includes("lwt")) {
-            await this.handleDeviceLwt(message, deviceId)
+            await this.handleDeviceLwt(deviceId, message)
         }
     }
 
@@ -81,8 +81,22 @@ class MqttHandler {
 
     private async handleDeviceLwt(deviceId: string, message: any) {
         try {
-            let newDevice = await this.deviceService.updateDevice(deviceId, message)
-            this.wss.send('device', newDevice)
+            const device = await this.deviceService.getDevice(deviceId)
+            let updatedDevice: Device;
+            if (device) {
+                let d: Device = {
+                    deviceId: deviceId,
+                    deviceType: device.device_type,
+                    deviceVersion: device.device_version,
+                    connectionStatus: message.status,
+                    lastSeen: new Date(),  
+                }
+                updatedDevice = await this.deviceService.updateDevice(deviceId, d)
+                this.wss.send('device', updatedDevice)
+            } else {
+                console.log("tried to handle lwt for non-existent device")
+            }
+
         }
         catch (err) {
             console.log(err)

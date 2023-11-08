@@ -13,7 +13,7 @@ class DeviceModel {
     constructor(db: Pool) {
         this.db = db
     }
-    public async get(): Promise<Device[]> {
+    public async get(): Promise<any[]> {
         const client = await this.getClient()
         const res = await client.query('SELECT * FROM devices')
         client.release()
