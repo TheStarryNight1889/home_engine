@@ -1,6 +1,6 @@
 <template>
-    <div class="bg-primary text-primary-content p-4 rounded">
-        <h1 class="text-xl">{{ device.device_id }}</h1>
+    <div class="bg-primary text-primary-content p-2">
+        <h1 class="text-l">{{ device.device_id }}</h1>
         <p class="text-sm">{{ device.device_type }}</p>
     </div>
 </template>

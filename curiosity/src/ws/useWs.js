@@ -16,7 +16,7 @@ export function useWs(url) {
     socket.value.onmessage = (event) => {
       const message = JSON.parse(event.data)
 
-      if (message.type === 'air') {
+      if (message.topic === 'sensor-air') {
         airStore.setLatest(message.data)
       } else{
         console.log(`[useWs] message type not found: ${message.type}`)

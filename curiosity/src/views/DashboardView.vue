@@ -1,6 +1,6 @@
 <template>
-  <div class="h-screen w-screen flex flex-col gap-8 px-4 py-8">
-    <div class="flex gap-2 bg-base-300 p-4 rounded w-full">
+  <div class="h-screen w-screen flex flex-col gap-4 px-4 py-4">
+    <div class="flex gap-2 bg-base-300 p-2 w-full">
       <device-card v-for="device in allDevice" :device="device"
         :class="{ 'bg-primary-focus': device.device_id === selectedDevice }"
         @click="setSelectedDevice(device.device_id)"></device-card>

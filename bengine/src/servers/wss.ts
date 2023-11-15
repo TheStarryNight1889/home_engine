@@ -1,5 +1,11 @@
 import { Server } from "bun"
+import { Air } from "../models/air"
+import { Device } from "../models/device"
 
+type WssMessage = {
+    topic: string
+    data: Air | Device
+}
 class Wss {
     private static instance: Wss
     private wss: Server
@@ -35,7 +41,8 @@ class Wss {
             },
         })
     }
-    public send(topic: string, data: any) {
+    public send(topic: string, data: WssMessage) {
+        console.log('Sending message to topic', topic)
         this.wss.publish(topic, JSON.stringify(data))
     }
 

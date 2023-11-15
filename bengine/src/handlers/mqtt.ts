@@ -2,16 +2,13 @@ import { Air } from "../models/air";
 import { Device } from "../models/device";
 import { AirService } from "../services/air";
 import { DeviceService } from "../services/device";
-import { Wss } from "../servers/wss";
 
 class MqttHandler {
     private deviceService: DeviceService;
     private airService: AirService;
-    private wss: Wss;
     constructor(deviceService: DeviceService, airService: AirService) {
         this.deviceService = deviceService;
         this.airService = airService;
-        this.wss = Wss.getInstance();
     }
 
     public async handle(topic: string, message: any) {
@@ -69,7 +66,6 @@ class MqttHandler {
 
                 }
                 newDevice = await this.deviceService.createDevice(d)
-                this.wss.send('device', newDevice)
             }
 
 
@@ -92,7 +88,6 @@ class MqttHandler {
                     lastSeen: new Date(),  
                 }
                 updatedDevice = await this.deviceService.updateDevice(deviceId, d)
-                this.wss.send('device', updatedDevice)
             } else {
                 console.log("tried to handle lwt for non-existent device")
             }
