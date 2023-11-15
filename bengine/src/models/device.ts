@@ -1,10 +1,10 @@
 import { Pool, PoolClient } from "pg"
 type Device = {
-    deviceId: string
-    deviceType: string
-    deviceVersion: string
-    connectionStatus: boolean
-    lastSeen: Date
+    device_id: string
+    device_type: string
+    device_version: string
+    connection_status: boolean
+    last_seen: Date
 }
 
 class DeviceModel {
@@ -30,11 +30,11 @@ class DeviceModel {
         const queryText = `INSERT INTO devices (device_id, device_type, device_version, connection_status, last_seen) 
                            VALUES ($1, $2, $3, $4, $5) RETURNING *`;
         const values = [
-            device.deviceId,
-            device.deviceType,
-            device.deviceVersion,
-            device.connectionStatus,
-            device.lastSeen
+            device.device_id,
+            device.device_type,
+            device.device_version,
+            device.connection_status,
+            device.last_seen
         ];
         const res = await client.query(queryText, values);
         client.release()
@@ -44,10 +44,10 @@ class DeviceModel {
         const client = await this.getClient()
         const queryText = `UPDATE devices SET device_type = $1, device_version = $2, connection_status = $3, last_seen = $4 WHERE device_id = $5 RETURNING *`
         const values = [
-            device.deviceType,
-            device.deviceVersion,
-            device.connectionStatus,
-            device.lastSeen,
+            device.device_type,
+            device.device_version,
+            device.connection_status,
+            device.last_seen,
             id
         ]
         const res = await client.query(queryText, values)

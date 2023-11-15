@@ -16,8 +16,6 @@ export const getSensorAir = async (deviceId, startTime) => {
         }
 
         const data = await response.json();
-        console.log('Fetched sensor air data');
-        console.log(data);
         return data;
     } catch (error) {
         console.error('An error occurred while fetching sensor air data:', error);
@@ -41,8 +39,6 @@ export const getDevices = async () => {
         }
 
         const data = await response.json();
-        console.log('Fetched devices data');
-        console.log(data);
         return data;
     } catch (error) {
         console.error('An error occurred while fetching devices data:', error);

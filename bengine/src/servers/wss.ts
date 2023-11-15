@@ -43,6 +43,7 @@ class Wss {
     }
     public send(topic: string, data: WssMessage) {
         console.log('Sending message to topic', topic)
+        console.log('Message:', data)
         this.wss.publish(topic, JSON.stringify(data))
     }
 

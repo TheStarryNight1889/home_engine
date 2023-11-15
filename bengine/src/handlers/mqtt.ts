@@ -49,20 +49,20 @@ class MqttHandler {
             let newDevice: Device;
             if (device) {
                 let d: Device = {
-                    deviceId: deviceId,
-                    deviceType: message.device_type,
-                    deviceVersion: message.device_version,
-                    connectionStatus: true,
-                    lastSeen: new Date(),  
+                    device_id: deviceId,
+                    device_type: message.device_type,
+                    device_version: message.device_version,
+                    connection_status: true,
+                    last_seen: new Date(),  
                 }
                 newDevice = await this.deviceService.updateDevice(deviceId, d)
             } else {
                 const d : Device = {
-                    deviceId: deviceId,
-                    deviceType: message.device_type,
-                    deviceVersion: message.device_version,
-                    connectionStatus: true,
-                    lastSeen: new Date(),
+                    device_id: deviceId,
+                    device_type: message.device_type,
+                    device_version: message.device_version,
+                    connection_status: true,
+                    last_seen: new Date(),
 
                 }
                 newDevice = await this.deviceService.createDevice(d)
@@ -81,11 +81,11 @@ class MqttHandler {
             let updatedDevice: Device;
             if (device) {
                 let d: Device = {
-                    deviceId: deviceId,
-                    deviceType: device.device_type,
-                    deviceVersion: device.device_version,
-                    connectionStatus: message.status,
-                    lastSeen: new Date(),  
+                    device_id: deviceId,
+                    device_type: device.device_type,
+                    device_version: device.device_version,
+                    connection_status: message.status,
+                    last_seen: new Date(),  
                 }
                 updatedDevice = await this.deviceService.updateDevice(deviceId, d)
             } else {

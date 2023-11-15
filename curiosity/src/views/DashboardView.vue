@@ -42,7 +42,6 @@ const setSelectedDevice = (deviceId) => {
 }
 
 const setGraphStartTime = async (startTime) => {
-  console.log(startTime)
   await airStore.setAll(selectedDevice.value, startTime);
 }
 
@@ -55,7 +54,6 @@ const series = computed(() => {
       y: item.co2,
     }
   })
-  console.log(data)
   return [
     {
       name: 'CO2',

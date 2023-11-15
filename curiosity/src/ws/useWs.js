@@ -18,7 +18,11 @@ export function useWs(url) {
 
       if (message.topic === 'sensor-air') {
         airStore.setLatest(message.data)
-      } else{
+      } else if (message.topic === 'device') {
+        console.log('device', message.data)
+        deviceStore.updateDevice(message.data)
+      }
+      else{
         console.log(`[useWs] message type not found: ${message.type}`)
       }
     }
