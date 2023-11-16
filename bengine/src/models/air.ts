@@ -14,9 +14,9 @@ class AirModel {
     constructor(db: Pool){
         this.db = db;
     }
-    public async getByDeviceId(device_id: string): Promise<Air[]> {
+    public async getByDeviceId(device_id: string, startTime: string): Promise<Air[]> {
         const client = await this.getClient();
-        const res = await client.query(`SELECT * FROM airs WHERE device_id = '${device_id}'`);
+        const res = await client.query(`SELECT * FROM airs WHERE device_id = '${device_id}' AND time > '${startTime}' ORDER BY time ASC`);
         client.release();
         return res.rows;
     }

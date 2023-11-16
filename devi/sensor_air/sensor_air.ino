@@ -134,13 +134,14 @@ void setInternalClock(RTCZero &rtc)
   rtc.begin();
   unsigned long epoch = 0;
   int numberOfTries = 0;
-  const int maxTries = 6;
+  const int maxTries = 60;
 
   Serial.println("Connecting to NTP server");
 
-  while ((epoch == 0) && (numberOfTries < maxTries))
+  while (epoch == 0 && numberOfTries < maxTries)
   {
     epoch = WiFi.getTime();
+    Serial.println(numberOfTries);
     numberOfTries++;
     delay(500);
   }

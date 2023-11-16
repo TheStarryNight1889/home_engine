@@ -10,8 +10,8 @@ class AirService {
         this.wss = Wss.getInstance()
     }
 
-    public async getAirs(deviceId: string): Promise<Air[] | null> {
-        return await this.airModel.getByDeviceId(deviceId)
+    public async getAirs(deviceId: string, startTime: string): Promise<Air[] | null> {
+        return await this.airModel.getByDeviceId(deviceId, startTime)
     }
 
     public async createAir(air: any): Promise<Air> {

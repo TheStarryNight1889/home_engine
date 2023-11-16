@@ -9,6 +9,7 @@ export const getSensorAir = async (deviceId, startTime) => {
                 'Authorization': `Bearer ${token}`
             },
         });
+        console.log(response);
 
         if (!response.ok) {
             console.log('Failed to fetch sensor air data');
