@@ -52,7 +52,7 @@ const getAir = computed(() => airStore.getLatestByDeviceId(selectedDevice.value)
 const series = computed(() => {
   const data = allAir.value.map((item) => {
     return {
-      x: new Date(item.time).toUTCString(),
+      x: new Date(item.time_bucket).toUTCString(),
       y: item.co2,
     }
   })
