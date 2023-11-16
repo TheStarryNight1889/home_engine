@@ -10,7 +10,11 @@ export const useAirsStore = defineStore('airs', () => {
     all.value = await getSensorAir(deviceId, startTime)
   }
   const setLatest = (data) => {
-    latest.value = data
+    latest.value[data.device_id] = data
+    console.log(latest.value)
   }
-  return { all, latest, setAll, setLatest }
+  const getLatestByDeviceId = (deviceId) => {
+    return latest.value[deviceId]
+  }
+  return { all, latest, setAll, setLatest, getLatestByDeviceId }
 })

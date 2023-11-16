@@ -7,7 +7,7 @@
     </div>
     <div class="flex flex-col gap-8 w-1/2 h-full">
       <div class="flex flex-row gap-4">
-        <live-summary class="w-1/2" :item="latestAir"></live-summary>
+        <live-summary class="w-1/2" :item="getAir"></live-summary>
         <device-info class="w-1/2" :device="getDevice"></device-info>
       </div>
       <timeseries-chart @graphStartTime="setGraphStartTime" class="h-full" :series="series"></timeseries-chart>
@@ -28,10 +28,11 @@ import DeviceInfo from '@/components/DeviceInfo.vue'
 const airStore = useAirsStore();
 const deviceStore = useDevicesStore();
 
-let selectedDevice = ref('Super Air');
+let selectedDevice = ref('airsensor1');
 
-const { all: allAir, latest: latestAir } = storeToRefs(airStore);
+const { all: allAir } = storeToRefs(airStore);
 const { all: allDevice } = storeToRefs(deviceStore);
+
 
 onMounted(async () => {
   await deviceStore.setAll();
@@ -46,6 +47,7 @@ const setGraphStartTime = async (startTime) => {
 }
 
 const getDevice = computed(() => deviceStore.getDeviceById(selectedDevice.value))
+const getAir = computed(() => airStore.getLatestByDeviceId(selectedDevice.value))
 
 const series = computed(() => {
   const data = allAir.value.map((item) => {
