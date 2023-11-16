@@ -13,26 +13,24 @@
   "dependencies": {
     "@auth0/auth0-vue": "^2.3.1",
     "apexcharts": "^3.40.0",
-    "axios": "^1.4.0",
-    "daisyui": "^2.51.6",
+    "axios": "^1.6.2",
+    "daisyui": "^4.3.1",
     "dayjs": "^1.11.7",
     "express-oauth2-jwt-bearer": "^1.5.0",
-    "pinia": "^2.0.36",
-    "vue": "^3.3.2",
-    "vue-cookies": "^1.8.3",
-    "vue-router": "^4.2.0",
+    "pinia": "^2.1.7",
+    "vue": "^3.3.8",
+    "vue-router": "^4.2.5",
     "vue3-apexcharts": "^1.4.1"
   },
   "devDependencies": {
-    "@rushstack/eslint-patch": "^1.2.0",
-    "@vitejs/plugin-vue": "^4.2.3",
+    "@vitejs/plugin-vue": "^4.5.0",
     "@vue/eslint-config-prettier": "^7.1.0",
     "autoprefixer": "^10.4.14",
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
-    "postcss": "^8.4.23",
+    "postcss": "^8.4.31",
     "prettier": "^2.8.8",
-    "tailwindcss": "^3.3.2",
-    "vite": "^4.3.5"
+    "tailwindcss": "^3.3.5",
+    "vite": "^5.0.0"
   }
 }

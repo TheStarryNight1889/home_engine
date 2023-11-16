@@ -10,7 +10,7 @@
 // TODO: move the values to a config file 
 const char DEVICE_ID[] = "airsensor1";
 const String DEVICE_TYPE = "air_sensor";
-const String DEVICE_VERSION = "0.0.0";
+const String DEVICE_VERSION = "v0.0.1";
 
 const char WIFI_SSID[] = "PorqueFi";
 const char WIFI_PASSWORD[] = "BecauseFiSaid0k";

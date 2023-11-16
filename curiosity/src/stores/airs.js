@@ -13,8 +13,8 @@ export const useAirsStore = defineStore('airs', () => {
     latest.value[data.device_id] = data
     console.log(latest.value)
   }
-  const getLatestByDeviceId = (deviceId) => {
-    return latest.value[deviceId]
+  const getLatestAirs = () => {
+    return latest.value
   }
-  return { all, latest, setAll, setLatest, getLatestByDeviceId }
+  return { all, latest, setAll, setLatest, getLatestAirs }
 })

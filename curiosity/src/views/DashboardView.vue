@@ -1,15 +1,9 @@
 <template>
   <div class="h-screen w-screen flex flex-col gap-4 px-4 py-4">
     <div class="flex gap-2 bg-base-300 p-2 w-full">
-      <device-card v-for="device in allDevice" :device="device"
-        :class="{ 'bg-primary-focus': device.device_id === selectedDevice }"
-        @click="setSelectedDevice(device.device_id)"></device-card>
+      <device-table :devices="allDevice" :latestAirs="getLatestAirs"></device-table>
     </div>
     <div class="flex flex-col gap-8 w-1/2 h-full">
-      <div class="flex flex-row gap-4">
-        <live-summary class="w-1/2" :item="getAir"></live-summary>
-        <device-info class="w-1/2" :device="getDevice"></device-info>
-      </div>
       <timeseries-chart @graphStartTime="setGraphStartTime" class="h-full" :series="series"></timeseries-chart>
     </div>
   </div>
@@ -20,10 +14,8 @@ import { onMounted, computed, ref } from 'vue'
 import { useAirsStore } from '@/stores/airs'
 import { useDevicesStore } from '@/stores/devices'
 import { storeToRefs } from 'pinia';
-import LiveSummary from '@/components/LiveSummary.vue'
+import DeviceTable from '../components/DeviceTable.vue';
 import TimeseriesChart from '@/components/TimeseriesChart.vue'
-import DeviceCard from '@/components/DeviceCard.vue'
-import DeviceInfo from '@/components/DeviceInfo.vue'
 
 const airStore = useAirsStore();
 const deviceStore = useDevicesStore();
@@ -40,6 +32,7 @@ onMounted(async () => {
 
 const setSelectedDevice = (deviceId) => {
   selectedDevice.value = deviceId
+  setGraphStartTime(new Date(Date.now() - 5 * 60 * 1000).toISOString())
 }
 
 const setGraphStartTime = async (startTime) => {
@@ -47,7 +40,7 @@ const setGraphStartTime = async (startTime) => {
 }
 
 const getDevice = computed(() => deviceStore.getDeviceById(selectedDevice.value))
-const getAir = computed(() => airStore.getLatestByDeviceId(selectedDevice.value))
+const getLatestAirs = computed(() => airStore.getLatestAirs())
 
 const series = computed(() => {
   const data = allAir.value.map((item) => {

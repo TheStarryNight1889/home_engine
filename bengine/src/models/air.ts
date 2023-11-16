@@ -33,7 +33,6 @@ class AirModel {
         time_bucket, device_id 
     ORDER BY 
         time_bucket ASC`);  
-        // const res = await client.query(`SELECT * FROM airs WHERE device_id = '${device_id}' AND time > '${startTime}' ORDER BY time ASC`);
         client.release();
         return res.rows;
     }
