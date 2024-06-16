@@ -1,9 +1,9 @@
 <template>
   <div class="h-screen w-screen flex flex-col gap-4 px-4 py-4">
     <div class="flex gap-2 bg-base-300 p-2 w-full">
-      <device-table :devices="allDevice" :latestAirs="getLatestAirs"></device-table>
+      <device-table :devices="allDevice" :latestAirs="getLatestAirs" @selectedDevice="setSelectedDevice"></device-table>
     </div>
-    <div class="flex flex-col gap-8 w-1/2 h-full">
+    <div class="flex flex-col gap-8 h-full">
       <timeseries-chart @graphStartTime="setGraphStartTime" class="h-full" :series="series"></timeseries-chart>
     </div>
   </div>
