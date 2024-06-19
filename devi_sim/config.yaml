@@ -1,0 +1,30 @@
+- id: "123456"
+  version: "1.0.0"
+  lwt: true
+  handshake: true
+  device_type: "air_sensor"
+  data:
+    temperature:
+      start_range: 20
+      end_range: 35
+    humidity:
+      start_range: 80
+      end_range: 100
+    co2:
+      start_range: 600
+      end_range: 800
+- id: "asdfhjkl"
+  version: "1.0.0"
+  lwt: true
+  handshake: true
+  device_type: "air_sensor"
+  data:
+    temperature:
+      start_range: 20
+      end_range: 35
+    humidity:
+      start_range: 80
+      end_range: 100
+    co2:
+      start_range: 600
+      end_range: 800
