@@ -14,8 +14,8 @@ defmodule Saercore.Mqtt.Handler do
     Logger.info("PID #{inspect(self())}")
 
     case String.split(topic, "/") do
-      ["saercore", "sensor", device_id, "air", "co2"] ->
-        process_message(:co2, device_id, payload)
+      ["saercore", sensor, device_id, medium, measurement] ->
+        process_message(sensor, device_id, payload, %{medium: medium, measurement: measurement})
 
       _ ->
         Logger.info("No handler for topic, skipping: #{topic}")
@@ -24,7 +24,7 @@ defmodule Saercore.Mqtt.Handler do
     {:noreply, state}
   end
 
-  defp process_message(:co2, device_id, payload) do
+  defp process_message("sensor", device_id, payload, metadata) do
     Logger.info("Processing CO2 message: #{inspect(payload)}")
 
     data = Jason.decode!(payload)
@@ -33,8 +33,8 @@ defmodule Saercore.Mqtt.Handler do
       device_id: device_id,
       timestamp: DateTime.from_iso8601(data["timestamp"]) |> elem(1),
       value: data["value"],
-      measurement: "co2",
-      medium: "air"
+      measurement: metadata[:measurement],
+      medium: metadata[:medium]
     })
 
     {:ok}
