@@ -11,6 +11,10 @@ tasks:
     cmds:
       -  docker compose stop timescaledb
       -  docker compose up -d timescaledb
+  mqtt:
+    cmds:
+      -  docker compose stop mosquitto
+      -  docker compose up -d mosquitto
   logs: 
     cmds:
       -  docker compose logs -f

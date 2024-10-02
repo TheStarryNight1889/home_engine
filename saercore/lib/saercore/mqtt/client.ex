@@ -23,17 +23,18 @@ defmodule Saercore.Mqtt.Client do
   def handle_continue(
         :connect_and_subscribe,
         %{
-          pid: pid,
-          client_id: client_id
+          pid: pid
         } = state
       ) do
     {:ok, _} = :emqtt.connect(pid)
-    topic = "saercore/sensor/#"
+    topics = ["saercore/sensor/#", "saercore/connection/#"]
 
-    {:ok, _, _} = :emqtt.subscribe(pid, {topic, 1})
-    {:noreply, state}
+    Enum.each(topics, fn topic ->
+      {:ok, _, _} = :emqtt.subscribe(pid, topic)
+      IO.puts("Connected and subscribed to #{topic}")
+      :ok
+    end)
 
-    IO.puts("Connected and subscribed to #{topic}")
     {:noreply, state}
   end
 
