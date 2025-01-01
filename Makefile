@@ -1,19 +1,19 @@
 .PHONY: start stop db mqtt logs
 
 start:
-	docker compose build
-	docker compose up -d
+	docker compose -f build/docker-compose.yaml build
+	docker compose -f build/docker-compose.yaml up -d
 
 stop:
-	docker compose down --remove-orphans
+	docker compose -f build/docker-compose.yaml down --remove-orphans
 
 db:
-	docker compose stop timescaledb
-	docker compose up -d timescaledb
+	docker compose -f build/docker-compose.yaml stop timescaledb
+	docker compose -f build/docker-compose.yaml up -d timescaledb
 
 mqtt:
-	docker compose stop mosquitto
-	docker compose up -d mosquitto
+	docker compose -f build/docker-compose.yaml stop mosquitto
+	docker compose -f build/docker-compose.yaml up -d mosquitto
 
 logs:
-	docker compose logs -f
+	docker compose -f build/docker-compose.yaml logs
