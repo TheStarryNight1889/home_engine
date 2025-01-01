@@ -12,10 +12,10 @@ const char DEVICE_ID[] = "airsensor1";
 const String DEVICE_TYPE = "air_sensor";
 const String DEVICE_VERSION = "v0.0.1";
 
-const char WIFI_SSID[] = "PorqueFi";
-const char WIFI_PASSWORD[] = "BecauseFiSaid0k";
+const char WIFI_SSID[] = "CM";
+const char WIFI_PASSWORD[] = "fZohpPXggQzYCnLZL9!ZXx_ZqJ";
 
-const char MQTT_BROKER[] = "192.168.0.69";
+const char MQTT_BROKER[] = "192.168.0.43";
 const int MQTT_PORT = 1883;
 const char MQTT_AIR_SENSOR_TOPIC[] = "data/airsensor1/sensor/air";
 const char MQTT_LWT_TOPIC[] = "device/airsensor1/lwt";

@@ -4,8 +4,8 @@ defmodule Saercore.Mqtt.Handler do
   require Logger
   use GenServer
   alias Saercore.Repo
-  alias Saercore.SensorData
-  alias Saercore.Device
+  alias Saercore.SensorDatas.SensorData
+  alias Saercore.Devices.Device
 
   def start_link(_), do: GenServer.start_link(__MODULE__, [], name: __MODULE__)
 

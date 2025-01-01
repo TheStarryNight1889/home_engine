@@ -1,4 +1,4 @@
-defmodule Saercore.SensorData do
+defmodule Saercore.SensorDatas.SensorData do
   use Ecto.Schema
   import Ecto.Changeset
 
