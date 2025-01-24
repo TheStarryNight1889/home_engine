@@ -25,7 +25,7 @@ CREATE TABLE devices (
     location_id VARCHAR(255),
     name VARCHAR(255),
     type device_type NOT NULL,
-    version INT NOT NULL,
+    version VARCHAR(255) NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     FOREIGN KEY (location_id) REFERENCES locations(id)

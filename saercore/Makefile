@@ -1,7 +1,7 @@
 .PHONY: migrate-up migrate-down migrate-create sqlc
 
-# Get database URL from environment or use default
-DB_URL ?= postgres://postgres:password@localhost:5432/yourdb?sslmode=disable
+DB_URL ?= postgres://root:root@127.0.0.1:5432/saercore?sslmode=disable
+
 
 
 # MIGRATIONS

@@ -20,7 +20,7 @@ type CreateDeviceParams struct {
 	LocationID pgtype.Text `db:"location_id" json:"location_id"`
 	Name       pgtype.Text `db:"name" json:"name"`
 	Type       DeviceType  `db:"type" json:"type"`
-	Version    int32       `db:"version" json:"version"`
+	Version    string      `db:"version" json:"version"`
 }
 
 func (q *Queries) CreateDevice(ctx context.Context, arg *CreateDeviceParams) (*Device, error) {
@@ -123,7 +123,7 @@ type UpdateDeviceParams struct {
 	LocationID pgtype.Text `db:"location_id" json:"location_id"`
 	Name       pgtype.Text `db:"name" json:"name"`
 	Type       DeviceType  `db:"type" json:"type"`
-	Version    int32       `db:"version" json:"version"`
+	Version    string      `db:"version" json:"version"`
 }
 
 func (q *Queries) UpdateDevice(ctx context.Context, arg *UpdateDeviceParams) (*Device, error) {

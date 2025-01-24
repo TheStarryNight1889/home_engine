@@ -58,7 +58,7 @@ type Device struct {
 	LocationID pgtype.Text        `db:"location_id" json:"location_id"`
 	Name       pgtype.Text        `db:"name" json:"name"`
 	Type       DeviceType         `db:"type" json:"type"`
-	Version    int32              `db:"version" json:"version"`
+	Version    string             `db:"version" json:"version"`
 	CreatedAt  pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt  pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }
