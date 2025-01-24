@@ -37,10 +37,8 @@ func main() {
 	deviceHandler.RegisterRoutes(mux)
 
 	server := &http.Server{
-		Addr: ":" + serverPort,
-		// if i need to add more middleware in the future, i can do something like this
-		// https://www.reddit.com/r/golang/comments/1aoxlsr/middleware_in_go_1220/
-		Handler: middleware.Logger(mux),
+		Addr:    ":" + serverPort,
+		Handler: middleware.Use(mux, middleware.Logger, middleware.Json),
 	}
 
 	log.Fatal(server.ListenAndServe())
