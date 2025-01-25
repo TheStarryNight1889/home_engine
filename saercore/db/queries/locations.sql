@@ -8,7 +8,7 @@ SELECT * FROM locations WHERE id = $1;
 INSERT INTO locations (id, name) VALUES ($1, $2) RETURNING *;
 
 -- name: UpdateLocation :one
-UPDATE locations SET name = $1 RETURNING *;
+UPDATE locations SET name = $2 WHERE id = $1 RETURNING *;
 
 -- name: DeleteLocation :one
 DELETE FROM locations WHERE id = $1 RETURNING *;

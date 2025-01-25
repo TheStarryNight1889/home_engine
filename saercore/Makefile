@@ -15,5 +15,8 @@ migrate-create:
 	@read -p "Enter migration name: " name; \
 	migrate create -ext sql -dir db/migrations -seq $$name
 
+migrate-reset:
+	migrate -database "$(DB_URL)" -path db/migrations drop -f
+
 sqlc:
 	sqlc generate

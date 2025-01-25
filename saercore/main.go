@@ -29,12 +29,16 @@ func main() {
 	}
 	defer dbpool.Close()
 
-	deviceQueries := db.New(dbpool)
+	queries := db.New(dbpool)
 
-	deviceHandler := handler.NewDeviceHandler(deviceQueries)
+	deviceHandler := handler.NewDeviceHandler(queries)
+	locationHandler := handler.NewLocationHandler(queries)
+	sensorAirHandler := handler.NewSensorAirHandler(queries)
 
 	mux := http.NewServeMux()
 	deviceHandler.RegisterRoutes(mux)
+	locationHandler.RegisterRoutes(mux)
+	sensorAirHandler.RegisterRoutes(mux)
 
 	server := &http.Server{
 		Addr:    ":" + serverPort,

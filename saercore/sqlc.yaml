@@ -5,6 +5,9 @@ sql:
     schema: "./db/migrations/"
     gen:
       go:
+        overrides:
+          - go_type: "string"
+            db_type: "uuid"
         package: "db"
         out: "./db/sqlc"
         sql_package: "pgx/v5"

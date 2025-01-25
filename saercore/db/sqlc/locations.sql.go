@@ -94,11 +94,16 @@ func (q *Queries) GetLocations(ctx context.Context) ([]*Location, error) {
 }
 
 const updateLocation = `-- name: UpdateLocation :one
-UPDATE locations SET name = $1 RETURNING id, name, created_at, updated_at
+UPDATE locations SET name = $2 WHERE id = $1 RETURNING id, name, created_at, updated_at
 `
 
-func (q *Queries) UpdateLocation(ctx context.Context, name pgtype.Text) (*Location, error) {
-	row := q.db.QueryRow(ctx, updateLocation, name)
+type UpdateLocationParams struct {
+	ID   string      `db:"id" json:"id"`
+	Name pgtype.Text `db:"name" json:"name"`
+}
+
+func (q *Queries) UpdateLocation(ctx context.Context, arg *UpdateLocationParams) (*Location, error) {
+	row := q.db.QueryRow(ctx, updateLocation, arg.ID, arg.Name)
 	var i Location
 	err := row.Scan(
 		&i.ID,

@@ -6,8 +6,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Querier interface {
@@ -16,15 +14,15 @@ type Querier interface {
 	CreateSensorAir(ctx context.Context, arg *CreateSensorAirParams) (*SensorAir, error)
 	DeleteDevice(ctx context.Context, id string) (*Device, error)
 	DeleteLocation(ctx context.Context, id string) (*Location, error)
-	DeleteSensorAir(ctx context.Context, id pgtype.UUID) (*SensorAir, error)
+	DeleteSensorAir(ctx context.Context, id string) (*SensorAir, error)
 	GetDevice(ctx context.Context, id string) (*Device, error)
 	GetDevices(ctx context.Context) ([]*Device, error)
 	GetLocation(ctx context.Context, id string) (*Location, error)
 	GetLocations(ctx context.Context) ([]*Location, error)
-	GetSensorAir(ctx context.Context, id pgtype.UUID) (*SensorAir, error)
+	GetSensorAir(ctx context.Context, id string) (*SensorAir, error)
 	GetSensorAirs(ctx context.Context) ([]*SensorAir, error)
 	UpdateDevice(ctx context.Context, arg *UpdateDeviceParams) (*Device, error)
-	UpdateLocation(ctx context.Context, name pgtype.Text) (*Location, error)
+	UpdateLocation(ctx context.Context, arg *UpdateLocationParams) (*Location, error)
 	UpdateSensorAir(ctx context.Context, arg *UpdateSensorAirParams) (*SensorAir, error)
 }
 

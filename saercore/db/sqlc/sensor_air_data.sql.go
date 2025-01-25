@@ -45,7 +45,7 @@ const deleteSensorAir = `-- name: DeleteSensorAir :one
 DELETE FROM sensor_airs WHERE id = $1 RETURNING id, device_id, temperature, humidity, co2, created_at
 `
 
-func (q *Queries) DeleteSensorAir(ctx context.Context, id pgtype.UUID) (*SensorAir, error) {
+func (q *Queries) DeleteSensorAir(ctx context.Context, id string) (*SensorAir, error) {
 	row := q.db.QueryRow(ctx, deleteSensorAir, id)
 	var i SensorAir
 	err := row.Scan(
@@ -63,7 +63,7 @@ const getSensorAir = `-- name: GetSensorAir :one
 SELECT id, device_id, temperature, humidity, co2, created_at FROM sensor_airs WHERE id = $1
 `
 
-func (q *Queries) GetSensorAir(ctx context.Context, id pgtype.UUID) (*SensorAir, error) {
+func (q *Queries) GetSensorAir(ctx context.Context, id string) (*SensorAir, error) {
 	row := q.db.QueryRow(ctx, getSensorAir, id)
 	var i SensorAir
 	err := row.Scan(
@@ -113,7 +113,7 @@ UPDATE sensor_airs SET device_id = $2, temperature = $3, humidity = $4, co2 = $5
 `
 
 type UpdateSensorAirParams struct {
-	ID          pgtype.UUID    `db:"id" json:"id"`
+	ID          string         `db:"id" json:"id"`
 	DeviceID    string         `db:"device_id" json:"device_id"`
 	Temperature pgtype.Numeric `db:"temperature" json:"temperature"`
 	Humidity    pgtype.Numeric `db:"humidity" json:"humidity"`

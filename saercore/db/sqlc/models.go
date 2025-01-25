@@ -55,7 +55,7 @@ func (ns NullDeviceType) Value() (driver.Value, error) {
 
 type Device struct {
 	ID         string             `db:"id" json:"id"`
-	LocationID pgtype.Text        `db:"location_id" json:"location_id"`
+	LocationID pgtype.UUID        `db:"location_id" json:"location_id"`
 	Name       pgtype.Text        `db:"name" json:"name"`
 	Type       DeviceType         `db:"type" json:"type"`
 	Version    string             `db:"version" json:"version"`
@@ -71,7 +71,7 @@ type Location struct {
 }
 
 type SensorAir struct {
-	ID          pgtype.UUID        `db:"id" json:"id"`
+	ID          string             `db:"id" json:"id"`
 	DeviceID    string             `db:"device_id" json:"device_id"`
 	Temperature pgtype.Numeric     `db:"temperature" json:"temperature"`
 	Humidity    pgtype.Numeric     `db:"humidity" json:"humidity"`
