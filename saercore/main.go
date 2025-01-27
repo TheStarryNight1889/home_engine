@@ -9,6 +9,7 @@ import (
 	"saercore/db/sqlc"
 	"saercore/http"
 	"saercore/http/middleware"
+	"saercore/mqtt"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -63,6 +64,9 @@ func main() {
 
 	querier := db.New(dbPool)
 	mux := createMux(querier)
+
+	mqttClient := mqtt.NewMqttClient()
+	mqttClient.Publish(1, "test", "testing")
 
 	startHttpServer(mux)
 }
