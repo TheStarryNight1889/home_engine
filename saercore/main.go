@@ -29,6 +29,7 @@ func startDbPool() *pgxpool.Pool {
 		log.Println(err)
 		log.Fatal("Could not connect to the database")
 	}
+	log.Println("Connected to database")
 	return dbpool
 }
 
@@ -66,7 +67,6 @@ func main() {
 	mux := createMux(querier)
 
 	mqttClient := mqtt.NewMqttClient()
-	mqttClient.Publish(1, "test", "testing")
 
 	startHttpServer(mux)
 }

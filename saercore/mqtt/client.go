@@ -32,9 +32,11 @@ type MqttClient struct {
 	ctx          context.Context
 	client       *autopaho.ConnectionManager
 	clientConfig autopaho.ClientConfig
+	router       *paho.StandardRouter
 }
 
 func NewMqttClient() *MqttClient {
+	router := paho.NewStandardRouter()
 	ctx := context.Background()
 	u := getUrl()
 	clientConfig := autopaho.ClientConfig{
@@ -58,7 +60,7 @@ func NewMqttClient() *MqttClient {
 			ClientID: getClientID(),
 			OnPublishReceived: []func(paho.PublishReceived) (bool, error){
 				func(pr paho.PublishReceived) (bool, error) {
-					log.Printf("received message on topic %s; body: %s (retain: %t)\n", pr.Packet.Topic, pr.Packet.Payload, pr.Packet.Retain)
+					router.Route(pr.Packet.Packet())
 					return true, nil
 				}},
 			OnClientError: func(err error) { log.Printf("client error: %s\n", err) },
@@ -84,6 +86,7 @@ func NewMqttClient() *MqttClient {
 		client:       client,
 		clientConfig: clientConfig,
 		ctx:          ctx,
+		router:       router,
 	}
 }
 
