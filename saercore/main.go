@@ -68,5 +68,7 @@ func main() {
 
 	mqttClient := mqtt.NewMqttClient()
 
+	mqtt.RegisterSensorDataHandlers(mqttClient)
+
 	startHttpServer(mux)
 }

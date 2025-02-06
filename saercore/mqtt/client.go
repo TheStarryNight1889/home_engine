@@ -48,7 +48,7 @@ func NewMqttClient() *MqttClient {
 			log.Println("Connected to MQTT Broker")
 			if _, err := cm.Subscribe(ctx, &paho.Subscribe{
 				Subscriptions: []paho.SubscribeOptions{
-					{Topic: "test/test", QoS: 1},
+					{Topic: "data/sensor/air", QoS: 1},
 				},
 			}); err != nil {
 				log.Fatal("failed to subscribe to topics. exiting...")
@@ -92,9 +92,8 @@ func NewMqttClient() *MqttClient {
 	}
 }
 
-func (mc *MqttClient) RegisterHandler(topic string, handler paho.MessageHandler) error {
+func (mc *MqttClient) RegisterHandler(topic string, handler paho.MessageHandler) {
 	mc.router.RegisterHandler(topic, handler)
-	return nil
 }
 
 func (mc *MqttClient) Publish(qos int8, topic string, payload any) error {
