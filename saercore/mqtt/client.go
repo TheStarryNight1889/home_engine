@@ -82,12 +82,19 @@ func NewMqttClient() *MqttClient {
 		panic(err)
 	}
 
+	router.DefaultHandler(func(p *paho.Publish) { log.Printf("defaulthandler received message with topic: %s\n", p.Topic) })
+
 	return &MqttClient{
 		client:       client,
 		clientConfig: clientConfig,
 		ctx:          ctx,
 		router:       router,
 	}
+}
+
+func (mc *MqttClient) RegisterHandler(topic string, handler paho.MessageHandler) error {
+	mc.router.RegisterHandler(topic, handler)
+	return nil
 }
 
 func (mc *MqttClient) Publish(qos int8, topic string, payload any) error {
