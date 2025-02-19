@@ -46,6 +46,11 @@ func createMux(querier *db.Queries) *http.ServeMux {
 	return mux
 }
 
+func createMqttHandlers(mqttClient *mqtt.MqttClient, querier *db.Queries) {
+	sensorDataHandler := mqtt.NewSensorDataHandler(querier, mqttClient)
+	sensorDataHandler.RegisterSensorDataHandlers()
+}
+
 func startHttpServer(mux *http.ServeMux) {
 	serverPort := os.Getenv("SERVER_PORT")
 	server := &http.Server{
@@ -68,7 +73,7 @@ func main() {
 
 	mqttClient := mqtt.NewMqttClient()
 
-	mqtt.RegisterSensorDataHandlers(mqttClient)
+	createMqttHandlers(mqttClient, querier)
 
 	startHttpServer(mux)
 }
