@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/url"
 	"os"
+	"saercore/mqtt/topics"
 
 	"github.com/eclipse/paho.golang/autopaho"
 	"github.com/eclipse/paho.golang/paho"
@@ -46,10 +47,12 @@ func NewMqttClient() *MqttClient {
 		SessionExpiryInterval:         60,
 		OnConnectionUp: func(cm *autopaho.ConnectionManager, c *paho.Connack) {
 			log.Println("Connected to MQTT Broker")
+			subs := make([]paho.SubscribeOptions, len(topics.All()))
+			for i, topic := range topics.All() {
+				subs[i] = paho.SubscribeOptions{Topic: topic, QoS: 1}
+			}
 			if _, err := cm.Subscribe(ctx, &paho.Subscribe{
-				Subscriptions: []paho.SubscribeOptions{
-					{Topic: "data/sensor/air", QoS: 1},
-				},
+				Subscriptions: subs,
 			}); err != nil {
 				log.Fatal("failed to subscribe to topics. exiting...")
 			}

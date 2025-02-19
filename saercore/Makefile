@@ -2,8 +2,6 @@
 
 DB_URL ?= postgres://root:root@127.0.0.1:5432/saercore?sslmode=disable
 
-
-
 # MIGRATIONS
 migrate-up:
 	migrate -database "$(DB_URL)" -path db/migrations up
