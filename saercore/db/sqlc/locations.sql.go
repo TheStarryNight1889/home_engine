@@ -7,8 +7,6 @@ package db
 
 import (
 	"context"
-
-	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const createLocation = `-- name: CreateLocation :one
@@ -16,8 +14,8 @@ INSERT INTO locations (id, name) VALUES ($1, $2) RETURNING id, name, created_at,
 `
 
 type CreateLocationParams struct {
-	ID   string      `db:"id" json:"id"`
-	Name pgtype.Text `db:"name" json:"name"`
+	ID   string  `db:"id" json:"id"`
+	Name *string `db:"name" json:"name"`
 }
 
 func (q *Queries) CreateLocation(ctx context.Context, arg *CreateLocationParams) (*Location, error) {
@@ -98,8 +96,8 @@ UPDATE locations SET name = $2 WHERE id = $1 RETURNING id, name, created_at, upd
 `
 
 type UpdateLocationParams struct {
-	ID   string      `db:"id" json:"id"`
-	Name pgtype.Text `db:"name" json:"name"`
+	ID   string  `db:"id" json:"id"`
+	Name *string `db:"name" json:"name"`
 }
 
 func (q *Queries) UpdateLocation(ctx context.Context, arg *UpdateLocationParams) (*Location, error) {

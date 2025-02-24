@@ -56,7 +56,7 @@ func (ns NullDeviceType) Value() (driver.Value, error) {
 type Device struct {
 	ID         string             `db:"id" json:"id"`
 	LocationID pgtype.UUID        `db:"location_id" json:"location_id"`
-	Name       pgtype.Text        `db:"name" json:"name"`
+	Name       *string            `db:"name" json:"name"`
 	Type       DeviceType         `db:"type" json:"type"`
 	Version    string             `db:"version" json:"version"`
 	CreatedAt  pgtype.Timestamptz `db:"created_at" json:"created_at"`
@@ -65,7 +65,7 @@ type Device struct {
 
 type Location struct {
 	ID        string             `db:"id" json:"id"`
-	Name      pgtype.Text        `db:"name" json:"name"`
+	Name      *string            `db:"name" json:"name"`
 	CreatedAt pgtype.Timestamptz `db:"created_at" json:"created_at"`
 	UpdatedAt pgtype.Timestamptz `db:"updated_at" json:"updated_at"`
 }

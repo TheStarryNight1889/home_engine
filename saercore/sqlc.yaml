@@ -8,10 +8,14 @@ sql:
         overrides:
           - go_type: "string"
             db_type: "uuid"
+          - go_type: "float64"
+            db_type: "pg_catalog.numeric"
+            nullable: false
         package: "db"
         out: "./db/sqlc"
         sql_package: "pgx/v5"
         emit_interface: true
+        emit_pointers_for_null_types: true
         emit_exact_table_names: false
         emit_empty_slices: true
         emit_params_struct_pointers: true

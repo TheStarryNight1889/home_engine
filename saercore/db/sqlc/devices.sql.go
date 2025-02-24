@@ -18,7 +18,7 @@ INSERT INTO devices (id, location_id, name, type, version) VALUES ($1, $2, $3, $
 type CreateDeviceParams struct {
 	ID         string      `db:"id" json:"id"`
 	LocationID pgtype.UUID `db:"location_id" json:"location_id"`
-	Name       pgtype.Text `db:"name" json:"name"`
+	Name       *string     `db:"name" json:"name"`
 	Type       DeviceType  `db:"type" json:"type"`
 	Version    string      `db:"version" json:"version"`
 }
@@ -121,7 +121,7 @@ UPDATE devices SET location_id = $2, name = $3, type = $4, version = $5 WHERE id
 type UpdateDeviceParams struct {
 	ID         string      `db:"id" json:"id"`
 	LocationID pgtype.UUID `db:"location_id" json:"location_id"`
-	Name       pgtype.Text `db:"name" json:"name"`
+	Name       *string     `db:"name" json:"name"`
 	Type       DeviceType  `db:"type" json:"type"`
 	Version    string      `db:"version" json:"version"`
 }
