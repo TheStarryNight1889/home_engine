@@ -29,9 +29,9 @@ func (s *SensorDataHandler) sensorDataAirHandler(p *paho.Publish) {
 	topicSegments := strings.Split(p.Topic, "/")
 	var payload struct {
 		Data struct {
-			Temperature float32 `json:"temperature"`
-			Humidity    float32 `json:"humidity"`
-			Co2         float32 `json:"co2"`
+			Temperature float64 `json:"temperature"`
+			Humidity    float64 `json:"humidity"`
+			Co2         float64 `json:"co2"`
 		} `json:"data"`
 		Timestamp string `json:"timestamp"`
 	}
