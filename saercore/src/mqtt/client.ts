@@ -18,9 +18,9 @@ const client: MqttClient = mqtt.connect(brokerUrl, {
 // Connection events
 client.on('connect', () => {
   console.log(`Connected to MQTT broker at ${brokerUrl}`);
-  
+
   // Subscribe to topics
-  TOPICS.forEach(topic => {
+  TOPICS.forEach((topic) => {
     client.subscribe(topic, (err) => {
       if (err) {
         console.error(`Failed to subscribe to ${topic}:`, err);
@@ -35,7 +35,7 @@ client.on('connect', () => {
 client.on('message', (topic: string, message: Buffer) => {
   try {
     const payload = JSON.parse(message.toString());
-    console.log(`Received message on topic ${topic}`);
+    console.log(`Received message on topic ${topic}`, payload);
     // Process message here or emit an event
   } catch (error) {
     console.error(`Failed to parse message from ${topic}:`, error);

@@ -7,6 +7,10 @@ export const sensorAirDataTable = sqliteTable('sensor_air_data', {
   temperature: real('temperature').notNull(),
   co2: real('co2').notNull(),
   humidity: real('humidity').notNull(),
-  createdAt: text('created_at').default(sql`(CURRENT_TIMESTAMP)`),
-  updatedAt: text('updated_at').default(sql`(CURRENT_TIMESTAMP)`),
+  createdAt: text('created_at')
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: text('updated_at')
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
 });
