@@ -1,5 +1,5 @@
 import { Elysia } from 'elysia';
-import deviceService from '../services/device-service';
+import deviceService from '../services/device.service';
 
 export default new Elysia({ name: 'devices', prefix: '/devices' })
   .decorate('deviceService', deviceService)

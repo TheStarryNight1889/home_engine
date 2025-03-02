@@ -1,5 +1,5 @@
 import { Elysia } from 'elysia';
-import sensorAirDataService from '../services/sensor-air-data';
+import sensorAirDataService from '../services/sensor-air.service';
 
 export default new Elysia({ name: 'sensor-airs', prefix: '/sensor/airs' })
   .decorate('sensorAirDataService', sensorAirDataService)
@@ -11,7 +11,7 @@ export default new Elysia({ name: 'sensor-airs', prefix: '/sensor/airs' })
     return sensorAirDataService.get(id);
   })
   .post('/', async ({ body, sensorAirDataService }) => {
-    const result = await sensorAirDataService.create(body as any);
+    const result = await sensorAirDataService.create(body);
     return new Response(JSON.stringify(result), {
       status: 201,
       headers: {

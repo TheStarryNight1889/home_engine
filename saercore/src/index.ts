@@ -1,7 +1,11 @@
 import { Elysia } from 'elysia';
-import devices from './http/devices';
-import sensorAirs from './http/sensor-airs';
+import devices from './http/devices.route';
+import sensorAirs from './http/sensor-airs.route';
 import swagger from '@elysiajs/swagger';
+import MqttService from './mqtt/client';
+
+const mqttService = new MqttService();
+mqttService.registerHandlers();
 
 const app = new Elysia()
   .state('startTime', 0)
