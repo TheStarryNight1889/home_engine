@@ -1,5 +1,6 @@
 import { Elysia } from 'elysia';
 import devices from './http/devices';
+import sensorAirs from './http/sensor-airs';
 import swagger from '@elysiajs/swagger';
 
 const app = new Elysia()
@@ -16,5 +17,6 @@ const app = new Elysia()
   })
   .use(swagger())
   .use(devices)
+  .use(sensorAirs)
   .listen(3000);
 console.log(`saercore is running at ${app.server?.hostname}:${app.server?.port}`);
