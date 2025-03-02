@@ -14,3 +14,16 @@ export const sensorAirDataTable = sqliteTable('sensor_air_data', {
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),
 });
+export const devicesTable = sqliteTable('devices', {
+  id: text('id').notNull(),
+  locationId: text('location_id').notNull(),
+  name: text('name').notNull(),
+  type: text('type').notNull(),
+  version: text('version').notNull(),
+  createdAt: text('created_at')
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+  updatedAt: text('updated_at')
+    .notNull()
+    .default(sql`(CURRENT_TIMESTAMP)`),
+});

@@ -1,59 +1,52 @@
 import { eq } from 'drizzle-orm';
 import db from '../db';
-import { sensorAirDataTable } from '../db/schema';
+import { devicesTable } from '../db/schema';
 
-export type DeviceData = {
+export type Device = {
   id: string;
-  deviceId: string;
-  temperature: number;
-  co2: number;
-  humidity: number;
+  locationId: string;
+  name: string;
+  type: string;
+  version: string;
   createdAt?: string;
   updatedAt?: string;
 };
 
-export type DeviceCreateInput = Omit<DeviceData, 'createdAt' | 'updatedAt'>;
-export type DeviceUpdateInput = Partial<Omit<DeviceData, 'id' | 'createdAt' | 'updatedAt'>>;
+export type DeviceCreateInput = Omit<Device, 'createdAt' | 'updatedAt'>;
+export type DeviceUpdateInput = Partial<Omit<Device, 'id' | 'createdAt' | 'updatedAt'>>;
 
 export class DeviceService {
-  async create(data: DeviceCreateInput): Promise<DeviceData> {
-    const [result] = await db.insert(sensorAirDataTable).values(data).returning();
+  async create(data: DeviceCreateInput): Promise<Device> {
+    const [result] = await db.insert(devicesTable).values(data).returning();
 
     return result;
   }
 
-  async get(id: string): Promise<DeviceData> {
-    const [result] = await db
-      .select()
-      .from(sensorAirDataTable)
-      .where(eq(sensorAirDataTable.id, id))
-      .limit(1);
+  async get(id: string): Promise<Device> {
+    const [result] = await db.select().from(devicesTable).where(eq(devicesTable.id, id)).limit(1);
 
     return result;
   }
 
-  async getAll(): Promise<DeviceData[]> {
-    return db.select().from(sensorAirDataTable);
+  async getAll(): Promise<Device[]> {
+    return db.select().from(devicesTable);
   }
 
-  async update(id: string, data: DeviceUpdateInput): Promise<DeviceData> {
+  async update(id: string, data: DeviceUpdateInput): Promise<Device> {
     const [result] = await db
-      .update(sensorAirDataTable)
+      .update(devicesTable)
       .set({
         ...data,
         updatedAt: new Date().toISOString(),
       })
-      .where(eq(sensorAirDataTable.id, id))
+      .where(eq(devicesTable.id, id))
       .returning();
 
     return result;
   }
 
-  async delete(id: string): Promise<DeviceData> {
-    const [result] = await db
-      .delete(sensorAirDataTable)
-      .where(eq(sensorAirDataTable.id, id))
-      .returning();
+  async delete(id: string): Promise<Device> {
+    const [result] = await db.delete(devicesTable).where(eq(devicesTable.id, id)).returning();
 
     return result;
   }
