@@ -2,10 +2,11 @@ import { Elysia } from 'elysia';
 import devices from './http/devices.route';
 import sensorAirs from './http/sensor-airs.route';
 import swagger from '@elysiajs/swagger';
+import sensorAirHandler from './mqtt/sensor-air.handler';
 import MqttService from './mqtt/client';
 
 const mqttService = new MqttService();
-mqttService.registerHandlers();
+mqttService.registerHandler('data/sensor/air/+', sensorAirHandler);
 
 const app = new Elysia()
   .state('startTime', 0)

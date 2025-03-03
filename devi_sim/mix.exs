@@ -23,7 +23,7 @@ defmodule DeviSim.MixProject do
   defp deps do
     [
       {:yaml_elixir, "~>2.7"},
-      {:tortoise, "~> 0.10.0"},
+      {:emqtt, github: "emqx/emqtt", tag: "1.14.1", system_env: [{"BUILD_WITHOUT_QUIC", "1"}]},
       {:jason, "~> 1.3"}
     ]
   end

@@ -63,9 +63,8 @@ defmodule DeviSim.Simulator do
   """
   @spec simulate_device(ConfigParser.t()) :: :ok
   def simulate_device(device) do
-    Logger.debug("Simulating device: #{inspect(device)}")
     device_message = MessageBuilder.build_message({:message, device})
-    MqttClient.publish("data/#{device.id}/sensor/air", device_message)
+    MqttClient.publish("data/sensor/air/#{device.id}", device_message)
     :ok
   end
 end
