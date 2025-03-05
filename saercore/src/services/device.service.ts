@@ -4,8 +4,8 @@ import { devicesTable } from '../db/schema';
 
 export type Device = {
   id: string;
-  locationId: string;
-  name: string;
+  locationId: string | null;
+  name: string | null;
   type: string;
   version: string;
   createdAt?: string;

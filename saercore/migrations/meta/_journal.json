@@ -15,6 +15,13 @@
       "when": 1740939092198,
       "tag": "0001_steep_darwin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1741213146162,
+      "tag": "0002_pretty_slipstream",
+      "breakpoints": true
     }
   ]
 }
