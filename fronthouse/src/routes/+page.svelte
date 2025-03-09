@@ -1,24 +1,7 @@
-<div class="h-screen">
-	<div class="bg-sky-50 text-center p-24 h-1/3">
-		<h1 class="text-8xl text-cyan-500 drop-shadow-sm">Saer</h1>
-		<p class="text-xl text-cyan-400 drop-shadow-xs">
-			Monitor your air quality with state of the art IoT devices.
-		</p>
-		<a href="https://app.saer.io/login">
-			<button>Login</button>
-		</a>
-	</div>
-	<div
-		class="text-center flex flex-col space-y-12 justify-center items-center h-2/3 mx-auto my-auto"
-	>
-		<h1 class="text-6xl">Coming soon...</h1>
-		<a href="https://github.com/TheStarryNight1889/home_engine" target="_blank" rel="noreferrer">
-			<button
-				class="bg-sky-200 p-2 rounded-md border border-cyan-300 flex justify-center items-center hover:bg-cyan-300"
-			>
-				<img src="./github-mark.svg" alt="" class="w-6 mr-2" />
-				GitHub
-			</button>
-		</a>
-	</div>
+<div class="flex flex-col justify-around items-center w-full h-screen bg-b">
+<div class="flex text-left flex-col text-center gap-2 boder border-4 rounded-xl p-6 border-flax">
+  <h1 class="text-white text-6xl">saer.</h1>
+  <h1 class="text-2xl text-flax">clean air solutions for everyone.</h1>
+  </div>
 </div>
+

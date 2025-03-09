@@ -1,3 +1,10 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme{
+  --color-b: #3A506B;
+  --color-lb: #92B9BD;
+  --color-flax: #F3DE8A;
+  --color-crayola: #FF5964;
+  --color-cinerous: #A78682;
+}
+
