@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for home-engine on 2025-03-09T00:24:01Z
+# fly.toml app configuration file generated for fronthouse on 2025-03-09T02:21:58Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'home-engine'
+app = 'fronthouse'
 primary_region = 'cdg'
 
 [build]
