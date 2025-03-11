@@ -1,54 +1,28 @@
 import { eq } from 'drizzle-orm';
 import db from '../db';
-import { sensorAirDataTable } from '../db/schema';
-
-export type SensorAirData = {
-  id: string;
-  deviceId: string;
-  temperature: number;
-  co2: number;
-  humidity: number;
-  createdAt?: string;
-  updatedAt?: string;
-};
-
-export type SensorAirDataCreateInput = Omit<SensorAirData, 'createdAt' | 'updatedAt'>;
-export type SensorAirDataUpdateInput = Partial<Omit<SensorAirData, 'id' | 'createdAt' | 'updatedAt'>>;
+import { randomUUIDv7 } from 'bun';
+import { sensorAirDataTable, type SensorAirData, type SensorAirDataEntity } from '../db/schema';
 
 export class SensorAirDataService {
-  async create(data: SensorAirDataCreateInput): Promise<SensorAirData> {
-    const [result] = await db.insert(sensorAirDataTable).values(data).returning();
+  async create(data: Omit<SensorAirData, 'id'>): Promise<SensorAirDataEntity> {
+    const dataWithId: SensorAirData = { ...data, id: randomUUIDv7() };
+    const [result] = await db.insert(sensorAirDataTable).values(dataWithId).returning();
 
     return result;
   }
 
-  async get(id: string): Promise<SensorAirData> {
-    const [result] = await db.select().from(sensorAirDataTable).where(eq(sensorAirDataTable.id, id)).limit(1);
-
-    return result;
-  }
-
-  async getAll(): Promise<SensorAirData[]> {
-    return db.select().from(sensorAirDataTable);
-  }
-
-  async update(id: string, data: SensorAirDataUpdateInput): Promise<SensorAirData> {
+  async get(id: string): Promise<SensorAirDataEntity> {
     const [result] = await db
-      .update(sensorAirDataTable)
-      .set({
-        ...data,
-        updatedAt: new Date().toISOString(),
-      })
+      .select()
+      .from(sensorAirDataTable)
       .where(eq(sensorAirDataTable.id, id))
-      .returning();
+      .limit(1);
 
     return result;
   }
 
-  async delete(id: string): Promise<SensorAirData> {
-    const [result] = await db.delete(sensorAirDataTable).where(eq(sensorAirDataTable.id, id)).returning();
-
-    return result;
+  async getAll(): Promise<SensorAirDataEntity[]> {
+    return db.select().from(sensorAirDataTable);
   }
 }
 export default new SensorAirDataService();

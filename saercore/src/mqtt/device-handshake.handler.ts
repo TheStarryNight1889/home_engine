@@ -1,4 +1,5 @@
-import deviceService, { type DeviceCreateInput } from '../services/device.service';
+import deviceService from '../services/device.service';
+import type { Device } from '../db/schema';
 export default async function (topic: string, message: Buffer): Promise<void> {
   const topicSegements = topic.split('/');
   const deviceId = topicSegements[3];
@@ -10,7 +11,7 @@ export default async function (topic: string, message: Buffer): Promise<void> {
 
   if (!existingDevice) {
     console.log(`device ${deviceId} is not registered`);
-    const newDevice: DeviceCreateInput = {
+    const newDevice: Device = {
       // the device has a hard coded id
       id: deviceId,
       version: payload.version,
