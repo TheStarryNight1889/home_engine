@@ -20,7 +20,6 @@ export default async function (topic: string, message: Buffer): Promise<void> {
       locationId: null,
       name: null,
     };
-
     await deviceService.create(newDevice);
   }
 }

@@ -27,7 +27,7 @@ export const devicesTable = sqliteTable('devices', {
     .notNull()
     .default(sql`(CURRENT_TIMESTAMP)`),
 });
-export const deviceConnections = sqliteTable('device_connections', {
+export const deviceConnectionsTable = sqliteTable('device_connections', {
   id: integer('id').primaryKey({ autoIncrement: true }),
   deviceId: text('device_id').references(() => devicesTable.id),
   connected: integer({ mode: 'boolean' }).notNull(),
@@ -45,5 +45,5 @@ export type SensorAirData = Omit<SensorAirDataEntity, 'createdAt' | 'updatedAt'>
 export type DeviceEntity = InferSelectModel<typeof devicesTable>;
 export type Device = Omit<DeviceEntity, 'createdAt' | 'updatedAt'>;
 
-export type DeviceConnectionEntity = InferSelectModel<typeof deviceConnections>;
+export type DeviceConnectionEntity = InferSelectModel<typeof deviceConnectionsTable>;
 export type DeviceConnection = Omit<DeviceConnectionEntity, 'createdAt' | 'updatedAt'>;
